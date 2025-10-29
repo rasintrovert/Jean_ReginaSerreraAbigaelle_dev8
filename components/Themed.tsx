@@ -1,13 +1,10 @@
 /**
- * Learn more about Light and Dark modes:
- * https://docs.expo.io/guides/color-schemes/
+ * Composants thématiques hérités - À migrer vers ThemedComponents.tsx
+ * Ce fichier est conservé pour la compatibilité avec l'écran de login existant
  */
 
+import { useTheme } from '@/theme';
 import { Text as DefaultText, View as DefaultView } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useThemeStore } from '@/store/themeStore';
-import { useColorScheme } from './useColorScheme';
 
 type ThemeProps = {
   lightColor?: string;
@@ -21,18 +18,14 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
-  const systemColorScheme = useColorScheme();
-  const { appTheme } = useThemeStore();
+  const theme = useTheme();
   
-  // Déterminer le thème actuel
-  const theme = appTheme === 'system' ? (systemColorScheme ?? 'light') : appTheme;
-  
-  const colorFromProps = props[theme];
+  const colorFromProps = props[theme === darkTheme ? 'dark' : 'light'];
   
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    return theme.colors[colorName as keyof typeof theme.colors] as string;
   }
 }
 
@@ -49,3 +42,8 @@ export function View(props: ViewProps) {
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
+
+// Import des types nécessaires pour la compatibilité
+import Colors from '@/constants/Colors';
+import { darkTheme } from '@/theme';
+

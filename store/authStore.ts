@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         id: '1',
         name: 'Jean Dupont',
         email: credentials.email,
-        role: 'admin',
+        role: 'agent',
         token: 'mock-token',
       };
       
