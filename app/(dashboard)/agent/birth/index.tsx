@@ -1,11 +1,12 @@
 import {
-    ThemedButton,
-    ThemedCard,
-    ThemedInput,
-    ThemedText,
-    ThemedView
+  ThemedButton,
+  ThemedCard,
+  ThemedInput,
+  ThemedText,
+  ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,6 +41,7 @@ export default function BirthRegistration() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [isGeneratingProof, setIsGeneratingProof] = useState(false);
   const [showGenderPicker, setShowGenderPicker] = useState(false);
   const [selectedGender, setSelectedGender] = useState<'male' | 'female' | ''>('');
@@ -61,17 +63,17 @@ export default function BirthRegistration() {
       console.log('Données naissance:', data);
       
       Alert.alert(
-        'Succès',
-        'Naissance enregistrée avec succès !\n\nLe dossier sera transmis à l\'administration pour validation.',
+        t('common.success'),
+        t('agent.birth.saved'),
         [
           {
-            text: 'OK',
+            text: t('common.confirm'),
             onPress: () => router.back(),
           },
         ]
       );
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'enregistrer la naissance');
+      Alert.alert(t('common.error'), t('errors.saveFailed'));
     }
   };
 
@@ -83,24 +85,24 @@ export default function BirthRegistration() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       Alert.alert(
-        'Preuve générée',
-        'Un QR code et un PDF provisoire ont été générés pour les parents.\n\nCe document est temporaire en attendant la validation officielle.',
+        t('agent.birth.proofGenerated'),
+        t('agent.birth.proofGeneratedDesc'),
         [
           {
-            text: 'Voir la preuve',
+            text: t('agent.history.viewProof'),
             onPress: () => {
               // TODO: Ouvrir la preuve générée
               console.log('Ouvrir preuve générée');
             },
           },
           {
-            text: 'OK',
+            text: t('common.confirm'),
             style: 'cancel',
           },
         ]
       );
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de générer la preuve');
+      Alert.alert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsGeneratingProof(false);
     }
@@ -108,9 +110,9 @@ export default function BirthRegistration() {
 
   const linkToPregnancy = () => {
     Alert.alert(
-      'Lier à une grossesse',
-      'Fonctionnalité à venir : recherche par ID ou QR code',
-      [{ text: 'OK' }]
+      t('agent.birth.linkPregnancy'),
+      t('agent.birth.searchPregnancy'),
+      [{ text: t('common.confirm') }]
     );
   };
 
@@ -127,27 +129,27 @@ export default function BirthRegistration() {
       >
         {/* Header */}
         <ThemedCard style={styles.headerCard}>
-          <ThemedView style={styles.headerContent}>
+          <ThemedView variant="transparent" style={styles.headerContent}>
             <FontAwesome 
-              name="baby" 
+              name="child" 
               size={isTablet ? 40 : 32} 
               color={theme.colors.primary} 
             />
-            <ThemedView style={styles.headerText}>
+            <ThemedView variant="transparent" style={styles.headerText}>
               <ThemedText 
                 size="xl" 
                 weight="bold" 
                 style={styles.title}
-                accessibilityLabel="Enregistrement de naissance"
+                accessibilityLabel={t('agent.birth.title')}
               >
-                Enregistrer Naissance
+                {t('agent.birth.title')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
-                accessibilityLabel="Formulaire pour enregistrer une nouvelle naissance"
+                accessibilityLabel={t('agent.birth.subtitle')}
               >
-                Nouvelle naissance
+                {t('agent.birth.subtitle')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -155,36 +157,36 @@ export default function BirthRegistration() {
 
         {/* Lien vers grossesse */}
         <ThemedCard style={styles.linkCard}>
-          <ThemedView style={styles.linkContent}>
+          <ThemedView variant="transparent" style={styles.linkContent}>
             <FontAwesome 
               name="link" 
               size={20} 
               color={theme.colors.info} 
             />
-            <ThemedView style={styles.linkText}>
+            <ThemedView variant="transparent" style={styles.linkText}>
               <ThemedText 
                 size="base" 
                 weight="medium"
-                accessibilityLabel="Lier à une grossesse existante"
+                accessibilityLabel={t('agent.birth.linkPregnancy')}
               >
-                Lier à une grossesse existante
+                {t('agent.birth.linkPregnancy')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
                 style={styles.linkSubtext}
               >
-                Rechercher par ID ou QR code (optionnel)
+                {t('agent.birth.searchPregnancy')} ({t('common.optional')})
               </ThemedText>
             </ThemedView>
             <ThemedButton
               variant="outline"
               size="sm"
               onPress={linkToPregnancy}
-              accessibilityLabel="Bouton lier grossesse"
-              accessibilityHint="Recherche une grossesse existante à lier"
+              accessibilityLabel={t('agent.birth.linkPregnancy')}
+              accessibilityHint={t('agent.birth.linkPregnancy')}
             >
-              Lier
+              {t('agent.birth.link')}
             </ThemedButton>
           </ThemedView>
         </ThemedCard>
@@ -195,35 +197,35 @@ export default function BirthRegistration() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations du bébé"
+            accessibilityLabel={t('agent.birth.babyInfo')}
           >
-            Informations du bébé
+            {t('agent.birth.babyInfo')}
           </ThemedText>
 
           {/* Prénom */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Prénom du bébé"
+              accessibilityLabel={t('agent.profile.firstName')}
             >
-              Prénom *
+              {t('agent.profile.firstName')} *
             </ThemedText>
             <Controller
               control={control}
               name="babyFirstName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Prénom du bébé"
+                  placeholder={t('agent.birth.babyName')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.babyFirstName ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ prénom du bébé"
-                  accessibilityHint="Saisissez le prénom du bébé"
+                  accessibilityLabel={t('agent.profile.firstName')}
+                  accessibilityHint={t('agent.profile.firstName')}
                   style={styles.input}
                 />
               )}
@@ -236,29 +238,29 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Nom */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Nom de famille du bébé"
+              accessibilityLabel={t('agent.profile.lastName')}
             >
-              Nom de famille *
+              {t('agent.profile.lastName')} *
             </ThemedText>
             <Controller
               control={control}
               name="babyLastName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Nom de famille du bébé"
+                  placeholder={t('agent.profile.lastName')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.babyLastName ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ nom de famille du bébé"
-                  accessibilityHint="Saisissez le nom de famille du bébé"
+                  accessibilityLabel={t('agent.profile.lastName')}
+                  accessibilityHint={t('agent.profile.lastName')}
                   style={styles.input}
                 />
               )}
@@ -271,14 +273,14 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Sexe */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Sexe du bébé"
+              accessibilityLabel={t('agent.birth.sex')}
             >
-              Sexe *
+              {t('agent.birth.sex')} *
             </ThemedText>
             <TouchableOpacity
               style={[
@@ -289,18 +291,18 @@ export default function BirthRegistration() {
                 }
               ]}
               onPress={() => setShowGenderPicker(!showGenderPicker)}
-              accessibilityLabel="Sélecteur de sexe"
-              accessibilityHint="Appuie pour choisir le sexe du bébé"
+              accessibilityLabel={t('agent.birth.sex')}
+              accessibilityHint={t('agent.birth.sex')}
             >
               <ThemedText 
-                style={[
-                  styles.pickerText,
-                  { color: selectedGender ? theme.colors.text : theme.colors.textSecondary }
-                ]}
+                style={{
+                  ...styles.pickerText,
+                  color: selectedGender ? theme.colors.text : theme.colors.textSecondary
+                }}
               >
-                {selectedGender === 'male' ? 'Masculin' : 
-               selectedGender === 'female' ? 'Féminin' : 
-               'Choisir le sexe'}
+                {selectedGender === 'male' ? t('agent.birth.sexMale') : 
+               selectedGender === 'female' ? t('agent.birth.sexFemale') : 
+               t('agent.birth.selectSex')}
               </ThemedText>
               <FontAwesome
                 name="chevron-down"
@@ -311,7 +313,7 @@ export default function BirthRegistration() {
             </TouchableOpacity>
             
             {showGenderPicker && (
-              <ThemedView style={[styles.pickerDropdown, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+              <ThemedView style={{ ...styles.pickerDropdown, backgroundColor: theme.colors.surface, borderColor: theme.colors.border }}>
                 <TouchableOpacity
                   style={styles.pickerItem}
                   onPress={() => {
@@ -321,7 +323,7 @@ export default function BirthRegistration() {
                   }}
                 >
                   <FontAwesome name="male" size={16} color={theme.colors.primary} />
-                  <ThemedText style={styles.pickerItemText}>Masculin</ThemedText>
+                  <ThemedText style={styles.pickerItemText}>{t('agent.birth.sexMale')}</ThemedText>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.pickerItem}
@@ -332,7 +334,7 @@ export default function BirthRegistration() {
                   }}
                 >
                   <FontAwesome name="female" size={16} color={theme.colors.primary} />
-                  <ThemedText style={styles.pickerItemText}>Féminin</ThemedText>
+                  <ThemedText style={styles.pickerItemText}>{t('agent.birth.sexFemale')}</ThemedText>
                 </TouchableOpacity>
               </ThemedView>
             )}
@@ -345,15 +347,15 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Date et heure de naissance */}
-          <ThemedView style={styles.rowContainer}>
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
+          <ThemedView variant="transparent" style={styles.rowContainer}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginRight: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Date de naissance"
+                accessibilityLabel={t('agent.birth.birthDate')}
               >
-                Date de naissance *
+                {t('agent.birth.birthDate')} *
               </ThemedText>
               <Controller
                 control={control}
@@ -367,22 +369,22 @@ export default function BirthRegistration() {
                     variant={errors.birthDate ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ date de naissance"
-                    accessibilityHint="Saisissez la date de naissance au format JJ/MM/AAAA"
+                    accessibilityLabel={t('agent.birth.birthDate')}
+                    accessibilityHint={t('agent.birth.birthDate')}
                     style={styles.input}
                   />
                 )}
               />
             </ThemedView>
             
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginLeft: 8 }]}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginLeft: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Heure de naissance"
+                accessibilityLabel={t('agent.birth.birthTime')}
               >
-                Heure *
+                {t('agent.birth.birthTime')} *
               </ThemedText>
               <Controller
                 control={control}
@@ -396,8 +398,8 @@ export default function BirthRegistration() {
                     variant={errors.birthTime ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ heure de naissance"
-                    accessibilityHint="Saisissez l'heure de naissance au format HH:MM"
+                    accessibilityLabel={t('agent.birth.birthTime')}
+                    accessibilityHint={t('agent.birth.birthTime')}
                     style={styles.input}
                   />
                 )}
@@ -406,29 +408,29 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Lieu de naissance */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Lieu de naissance"
+              accessibilityLabel={t('agent.birth.birthPlace')}
             >
-              Lieu de naissance *
+              {t('agent.birth.birthPlace')} *
             </ThemedText>
             <Controller
               control={control}
               name="birthPlace"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Hôpital, clinique, domicile..."
+                  placeholder={t('agent.birth.birthPlace')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.birthPlace ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ lieu de naissance"
-                  accessibilityHint="Saisissez le lieu de naissance"
+                  accessibilityLabel={t('agent.birth.birthPlace')}
+                  accessibilityHint={t('agent.birth.birthPlace')}
                   style={styles.input}
                 />
               )}
@@ -447,65 +449,65 @@ export default function BirthRegistration() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations des parents"
+            accessibilityLabel={t('agent.birth.parentsInfo')}
           >
-            Informations des parents
+            {t('agent.birth.parentsInfo')}
           </ThemedText>
 
           {/* Mère */}
-          <ThemedView style={styles.rowContainer}>
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
+          <ThemedView variant="transparent" style={styles.rowContainer}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginRight: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Prénom de la mère"
+                accessibilityLabel={t('agent.pregnancy.motherName')}
               >
-                Prénom mère *
+                {t('agent.profile.firstName')} {t('agent.pregnancy.motherName')} *
               </ThemedText>
               <Controller
                 control={control}
                 name="motherFirstName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Prénom"
+                    placeholder={t('agent.profile.firstName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant={errors.motherFirstName ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ prénom de la mère"
-                    accessibilityHint="Saisissez le prénom de la mère"
+                    accessibilityLabel={t('agent.profile.firstName')}
+                    accessibilityHint={t('agent.profile.firstName')}
                     style={styles.input}
                   />
                 )}
               />
             </ThemedView>
             
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginLeft: 8 }]}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginLeft: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Nom de famille de la mère"
+                accessibilityLabel={t('agent.pregnancy.motherName')}
               >
-                Nom mère *
+                {t('agent.profile.lastName')} {t('agent.pregnancy.motherName')} *
               </ThemedText>
               <Controller
                 control={control}
                 name="motherLastName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Nom de famille"
+                    placeholder={t('agent.profile.lastName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant={errors.motherLastName ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ nom de famille de la mère"
-                    accessibilityHint="Saisissez le nom de famille de la mère"
+                    accessibilityLabel={t('agent.profile.lastName')}
+                    accessibilityHint={t('agent.profile.lastName')}
                     style={styles.input}
                   />
                 )}
@@ -514,59 +516,59 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Père */}
-          <ThemedView style={styles.rowContainer}>
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
+          <ThemedView variant="transparent" style={styles.rowContainer}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginRight: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Prénom du père"
+                accessibilityLabel={t('agent.birth.fatherName')}
               >
-                Prénom père
+                {t('agent.profile.firstName')} {t('agent.birth.fatherName')} ({t('common.optional')})
               </ThemedText>
               <Controller
                 control={control}
                 name="fatherFirstName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Prénom"
+                    placeholder={t('agent.profile.firstName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant="default"
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ prénom du père"
-                    accessibilityHint="Saisissez le prénom du père (optionnel)"
+                    accessibilityLabel={t('agent.profile.firstName')}
+                    accessibilityHint={t('agent.profile.firstName')}
                     style={styles.input}
                   />
                 )}
               />
             </ThemedView>
             
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginLeft: 8 }]}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginLeft: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Nom de famille du père"
+                accessibilityLabel={t('agent.birth.fatherName')}
               >
-                Nom père
+                {t('agent.profile.lastName')} {t('agent.birth.fatherName')} ({t('common.optional')})
               </ThemedText>
               <Controller
                 control={control}
                 name="fatherLastName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Nom de famille"
+                    placeholder={t('agent.profile.lastName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant="default"
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ nom de famille du père"
-                    accessibilityHint="Saisissez le nom de famille du père (optionnel)"
+                    accessibilityLabel={t('agent.profile.lastName')}
+                    accessibilityHint={t('agent.profile.lastName')}
                     style={styles.input}
                   />
                 )}
@@ -581,35 +583,35 @@ export default function BirthRegistration() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations médicales"
+            accessibilityLabel={t('agent.birth.medicalInfo')}
           >
-            Informations médicales
+            {t('agent.birth.medicalInfo')}
           </ThemedText>
 
           {/* Médecin/Agent */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Nom du médecin ou agent"
+              accessibilityLabel={t('agent.birth.doctor')}
             >
-              Médecin/Agent présent *
+              {t('agent.birth.doctor')} *
             </ThemedText>
             <Controller
               control={control}
               name="doctorName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Nom du médecin ou agent"
+                  placeholder={t('agent.birth.doctor')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.doctorName ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ nom du médecin ou agent"
-                  accessibilityHint="Saisissez le nom du médecin ou agent présent"
+                  accessibilityLabel={t('agent.birth.doctor')}
+                  accessibilityHint={t('agent.birth.doctor')}
                   style={styles.input}
                 />
               )}
@@ -622,51 +624,51 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Témoin */}
-          <ThemedView style={styles.rowContainer}>
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
+          <ThemedView variant="transparent" style={styles.rowContainer}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginRight: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Nom du témoin"
+                accessibilityLabel={t('agent.birth.witness')}
               >
-                Nom témoin *
+                {t('agent.birth.witness')} *
               </ThemedText>
               <Controller
                 control={control}
                 name="witnessName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Nom du témoin"
+                    placeholder={t('agent.birth.witness')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant={errors.witnessName ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ nom du témoin"
-                    accessibilityHint="Saisissez le nom du témoin"
+                    accessibilityLabel={t('agent.birth.witness')}
+                    accessibilityHint={t('agent.birth.witness')}
                     style={styles.input}
                   />
                 )}
               />
             </ThemedView>
             
-            <ThemedView style={[styles.inputContainer, { flex: 1, marginLeft: 8 }]}>
+            <ThemedView variant="transparent" style={{ ...styles.inputContainer, flex: 1, marginLeft: 8 }}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Contact du témoin"
+                accessibilityLabel={t('agent.pregnancy.contact')}
               >
-                Contact témoin *
+                {t('agent.pregnancy.contact')} {t('agent.birth.witness')} *
               </ThemedText>
               <Controller
                 control={control}
                 name="witnessContact"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Téléphone"
+                    placeholder={t('agent.profile.phone')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -674,8 +676,8 @@ export default function BirthRegistration() {
                     size="md"
                     fullWidth
                     keyboardType="phone-pad"
-                    accessibilityLabel="Champ contact du témoin"
-                    accessibilityHint="Saisissez le contact du témoin"
+                    accessibilityLabel={t('agent.profile.phone')}
+                    accessibilityHint={t('agent.profile.phone')}
                     style={styles.input}
                   />
                 )}
@@ -684,21 +686,21 @@ export default function BirthRegistration() {
           </ThemedView>
 
           {/* Notes */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Notes additionnelles"
+              accessibilityLabel={t('agent.pregnancy.notes')}
             >
-              Notes (optionnel)
+              {t('agent.pregnancy.notes')} ({t('common.optional')})
             </ThemedText>
             <Controller
               control={control}
               name="notes"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Informations supplémentaires..."
+                  placeholder={t('agent.pregnancy.notes')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -707,9 +709,9 @@ export default function BirthRegistration() {
                   fullWidth
                   multiline
                   numberOfLines={4}
-                  accessibilityLabel="Champ notes additionnelles"
-                  accessibilityHint="Saisissez des informations supplémentaires si nécessaire"
-                  style={[styles.input, styles.multilineInput]}
+                  accessibilityLabel={t('agent.pregnancy.notes')}
+                  accessibilityHint={t('agent.pregnancy.notes')}
+                  style={{ ...styles.input, ...styles.multilineInput }}
                 />
               )}
             />
@@ -723,11 +725,11 @@ export default function BirthRegistration() {
             size="lg"
             fullWidth
             onPress={() => router.back()}
-            accessibilityLabel="Bouton annuler"
-            accessibilityHint="Annule la saisie et retourne à l'écran précédent"
+            accessibilityLabel={t('common.cancel')}
+            accessibilityHint={t('common.cancel')}
             style={styles.button}
           >
-            Annuler
+            {t('common.cancel')}
           </ThemedButton>
           
           <ThemedButton
@@ -736,11 +738,11 @@ export default function BirthRegistration() {
             fullWidth
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid}
-            accessibilityLabel="Bouton enregistrer"
-            accessibilityHint="Enregistre les informations de naissance"
+            accessibilityLabel={t('common.save')}
+            accessibilityHint={t('common.save')}
             style={styles.button}
           >
-            Enregistrer
+            {t('common.save')}
           </ThemedButton>
 
           <ThemedButton
@@ -749,11 +751,11 @@ export default function BirthRegistration() {
             fullWidth
             onPress={generateProof}
             disabled={!isValid || isGeneratingProof}
-            accessibilityLabel="Bouton générer preuve"
-            accessibilityHint="Génère une preuve provisoire PDF/QR code pour les parents"
+            accessibilityLabel={t('agent.birth.generateProof')}
+            accessibilityHint={t('agent.birth.generateProof')}
             style={styles.button}
           >
-            {isGeneratingProof ? 'Génération...' : 'Générer Preuve'}
+            {isGeneratingProof ? t('common.loading') : t('agent.birth.generateProof')}
           </ThemedButton>
         </ThemedView>
 
@@ -764,7 +766,7 @@ export default function BirthRegistration() {
               size="base" 
               weight="semibold" 
               style={styles.summaryTitle}
-              accessibilityLabel="Résumé des données saisies"
+              accessibilityLabel="Résumé"
             >
               Résumé
             </ThemedText>
@@ -774,12 +776,12 @@ export default function BirthRegistration() {
             </ThemedText>
             {formData.birthDate && (
               <ThemedText variant="secondary" size="sm" style={styles.summaryText}>
-                Né(e) le: {formData.birthDate} à {formData.birthTime}
+                {t('agent.birth.birthDate')}: {formData.birthDate} {t('agent.birth.birthTime')}: {formData.birthTime}
               </ThemedText>
             )}
             {formData.birthPlace && (
               <ThemedText variant="secondary" size="sm" style={styles.summaryText}>
-                Lieu: {formData.birthPlace}
+                {t('agent.birth.birthPlace')}: {formData.birthPlace}
               </ThemedText>
             )}
           </ThemedCard>

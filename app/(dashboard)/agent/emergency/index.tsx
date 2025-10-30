@@ -1,11 +1,12 @@
 import {
-    ThemedButton,
-    ThemedCard,
-    ThemedInput,
-    ThemedText,
-    ThemedView
+  ThemedButton,
+  ThemedCard,
+  ThemedInput,
+  ThemedText,
+  ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,6 +31,7 @@ export default function EmergencyScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [isSending, setIsSending] = useState(false);
   const [showUrgencyPicker, setShowUrgencyPicker] = useState(false);
   const [selectedUrgency, setSelectedUrgency] = useState<'low' | 'medium' | 'high' | 'critical' | ''>('');
@@ -53,17 +55,17 @@ export default function EmergencyScreen() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       Alert.alert(
-        'Urgence signalée',
-        'Votre signalement d\'urgence a été transmis avec succès.\n\nL\'administration a été notifiée et prendra les mesures nécessaires.',
+        t('agent.emergency.reported'),
+        t('agent.emergency.reportedDesc'),
         [
           {
-            text: 'OK',
+            text: t('common.confirm'),
             onPress: () => router.back(),
           },
         ]
       );
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'envoyer le signalement d\'urgence');
+      Alert.alert(t('common.error'), t('agent.emergency.sendReport'));
     } finally {
       setIsSending(false);
     }
@@ -71,12 +73,12 @@ export default function EmergencyScreen() {
 
   const callEmergency = (number: string) => {
     Alert.alert(
-      'Appel d\'urgence',
-      `Appeler ${number} ?`,
+      t('agent.emergency.callEmergency'),
+      t('agent.emergency.callEmergencyDesc', { number }),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: 'Appeler', 
+          text: t('agent.emergency.call'), 
           onPress: () => Linking.openURL(`tel:${number}`)
         },
       ]
@@ -84,48 +86,48 @@ export default function EmergencyScreen() {
   };
 
   const emergencyNumbers = [
-    { name: 'Police', number: '114', icon: 'shield' as const, color: theme.colors.primary },
-    { name: 'Pompiers', number: '115', icon: 'fire' as const, color: theme.colors.error },
-    { name: 'Ambulance', number: '116', icon: 'ambulance' as const, color: theme.colors.success },
-    { name: 'Urgences médicales', number: '118', icon: 'hospital' as const, color: theme.colors.info },
+    { name: t('agent.emergency.police'), number: '114', icon: 'shield' as const, color: theme.colors.primary },
+    { name: t('agent.emergency.firefighters'), number: '115', icon: 'fire' as const, color: theme.colors.error },
+    { name: t('agent.emergency.ambulance'), number: '116', icon: 'ambulance' as const, color: theme.colors.success },
+    { name: t('agent.emergency.medicalEmergency'), number: '118', icon: 'hospital-o' as const, color: theme.colors.info },
   ];
 
   const urgencyLevels = [
-    { value: 'low', label: 'Faible', color: theme.colors.success },
-    { value: 'medium', label: 'Moyen', color: theme.colors.warning },
-    { value: 'high', label: 'Élevé', color: theme.colors.error },
-    { value: 'critical', label: 'Critique', color: '#8B0000' },
+    { value: 'low', label: t('agent.emergency.urgencyLevels.low'), color: theme.colors.success },
+    { value: 'medium', label: t('agent.emergency.urgencyLevels.medium'), color: theme.colors.warning },
+    { value: 'high', label: t('agent.emergency.urgencyLevels.high'), color: theme.colors.error },
+    { value: 'critical', label: t('agent.emergency.urgencyLevels.critical'), color: '#8B0000' },
   ];
 
   const safetyTips = [
     {
-      title: 'En cas d\'accouchement imminent',
+      title: t('agent.emergency.tips.imminentBirth'),
       tips: [
-        'Restez calme et rassurez la mère',
-        'Préparez un endroit propre et confortable',
-        'Appelez immédiatement les secours médicaux',
-        'Ne coupez pas le cordon ombilical',
-        'Gardez le bébé au chaud'
+        t('agent.emergency.tips.imminentBirthTip1'),
+        t('agent.emergency.tips.imminentBirthTip2'),
+        t('agent.emergency.tips.imminentBirthTip3'),
+        t('agent.emergency.tips.imminentBirthTip4'),
+        t('agent.emergency.tips.imminentBirthTip5')
       ]
     },
     {
-      title: 'En cas d\'urgence médicale',
+      title: t('agent.emergency.tips.medicalEmergencyTitle'),
       tips: [
-        'Évaluez la situation rapidement',
-        'Appelez les secours appropriés',
-        'Ne déplacez pas la personne si blessée',
-        'Appliquez les premiers secours si formé',
-        'Restez avec la personne jusqu\'aux secours'
+        t('agent.emergency.tips.medicalEmergencyTip1'),
+        t('agent.emergency.tips.medicalEmergencyTip2'),
+        t('agent.emergency.tips.medicalEmergencyTip3'),
+        t('agent.emergency.tips.medicalEmergencyTip4'),
+        t('agent.emergency.tips.medicalEmergencyTip5')
       ]
     },
     {
-      title: 'En cas de danger imminent',
+      title: t('agent.emergency.tips.dangerTitle'),
       tips: [
-        'Évacuez la zone si nécessaire',
-        'Appelez immédiatement la police',
-        'Protégez les personnes vulnérables',
-        'Ne vous mettez pas en danger',
-        'Informez les autorités compétentes'
+        t('agent.emergency.tips.dangerTip1'),
+        t('agent.emergency.tips.dangerTip2'),
+        t('agent.emergency.tips.dangerTip3'),
+        t('agent.emergency.tips.dangerTip4'),
+        t('agent.emergency.tips.dangerTip5')
       ]
     }
   ];
@@ -142,28 +144,28 @@ export default function EmergencyScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header d'urgence */}
-        <ThemedCard style={[styles.headerCard, { borderLeftWidth: 4, borderLeftColor: theme.colors.error }]}>
-          <ThemedView style={styles.headerContent}>
+        <ThemedCard style={{ ...styles.headerCard, borderLeftWidth: 4, borderLeftColor: theme.colors.error }}>
+          <ThemedView variant="transparent" style={styles.headerContent}>
             <FontAwesome 
               name="exclamation-triangle" 
               size={isTablet ? 40 : 32} 
               color={theme.colors.error} 
             />
-            <ThemedView style={styles.headerText}>
+            <ThemedView variant="transparent" style={styles.headerText}>
               <ThemedText 
                 size="xl" 
                 weight="bold" 
-                style={[styles.title, { color: theme.colors.error }]}
-                accessibilityLabel="Signalement d'urgence"
+                style={{ ...styles.title, color: theme.colors.error }}
+                accessibilityLabel={t('agent.emergency.title')}
               >
-                Signalement d'Urgence
+                {t('agent.emergency.title')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
-                accessibilityLabel="Formulaire pour signaler une urgence critique"
+                accessibilityLabel={t('agent.emergency.subtitle')}
               >
-                Situation critique nécessitant une intervention immédiate
+                {t('agent.emergency.subtitle')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -175,28 +177,28 @@ export default function EmergencyScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Numéros d'urgence"
+            accessibilityLabel={t('agent.emergency.emergencyNumbers')}
           >
-            📞 Numéros d'urgence
+            📞 {t('agent.emergency.emergencyNumbers')}
           </ThemedText>
           
-          <ThemedView style={styles.emergencyGrid}>
+          <ThemedView variant="transparent" style={styles.emergencyGrid}>
             {emergencyNumbers.map((emergency) => (
               <ThemedButton
                 key={emergency.number}
                 variant="outline"
-                style={[styles.emergencyButton, { borderColor: emergency.color }]}
+                style={{ ...styles.emergencyButton, borderColor: emergency.color }}
                 onPress={() => callEmergency(emergency.number)}
                 accessibilityLabel={`Appeler ${emergency.name} - ${emergency.number}`}
                 accessibilityHint={`Appuie pour appeler ${emergency.name}`}
               >
-                <ThemedView style={styles.emergencyButtonContent}>
+                <ThemedView variant="transparent" style={styles.emergencyButtonContent}>
                   <FontAwesome 
                     name={emergency.icon} 
                     size={20} 
                     color={emergency.color} 
                   />
-                  <ThemedView style={styles.emergencyButtonText}>
+                  <ThemedView variant="transparent" style={styles.emergencyButtonText}>
                     <ThemedText 
                       size="sm" 
                       weight="semibold"
@@ -224,13 +226,13 @@ export default function EmergencyScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Conseils de sécurité"
+            accessibilityLabel={t('agent.emergency.safetyTips')}
           >
-            🚨 Conseils de sécurité
+            🚨 {t('agent.emergency.safetyTips')}
           </ThemedText>
           
           {safetyTips.map((tip, index) => (
-            <ThemedView key={index} style={styles.tipSection}>
+            <ThemedView key={index} variant="transparent" style={styles.tipSection}>
               <ThemedText 
                 size="base" 
                 weight="semibold" 
@@ -240,7 +242,7 @@ export default function EmergencyScreen() {
                 {tip.title}
               </ThemedText>
               {tip.tips.map((tipText, tipIndex) => (
-                <ThemedView key={tipIndex} style={styles.tipItem}>
+                <ThemedView key={tipIndex} variant="transparent" style={styles.tipItem}>
                   <FontAwesome 
                     name="check-circle" 
                     size={12} 
@@ -267,35 +269,35 @@ export default function EmergencyScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Formulaire de signalement"
+            accessibilityLabel={t('agent.emergency.detailedReport')}
           >
-            📝 Signalement détaillé
+            📝 {t('agent.emergency.detailedReport')}
           </ThemedText>
 
           {/* Type d'urgence */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Type d'urgence"
+              accessibilityLabel={t('agent.emergency.emergencyType')}
             >
-              Type d'urgence *
+              {t('agent.emergency.emergencyType')} *
             </ThemedText>
             <Controller
               control={control}
               name="emergencyType"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Ex: Accouchement imminent, accident, violence..."
+                  placeholder={t('agent.emergency.emergencyTypePlaceholder')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.emergencyType ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ type d'urgence"
-                  accessibilityHint="Décrivez le type d'urgence"
+                  accessibilityLabel={t('agent.emergency.emergencyType')}
+                  accessibilityHint={t('agent.emergency.emergencyType')}
                   style={styles.input}
                 />
               )}
@@ -308,31 +310,29 @@ export default function EmergencyScreen() {
           </ThemedView>
 
           {/* Niveau d'urgence */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Niveau d'urgence"
+              accessibilityLabel={t('agent.emergency.urgencyLevel')}
             >
-              Niveau d'urgence *
+              {t('agent.emergency.urgencyLevel')} *
             </ThemedText>
-            <ThemedView style={styles.urgencyButtons}>
+            <ThemedView variant="transparent" style={styles.urgencyButtons}>
               {urgencyLevels.map((level) => (
                 <ThemedButton
                   key={level.value}
                   variant={selectedUrgency === level.value ? 'primary' : 'outline'}
                   size="sm"
-                  style={[
-                    styles.urgencyButton,
-                    { 
-                      borderColor: level.color,
-                      backgroundColor: selectedUrgency === level.value ? level.color : 'transparent'
-                    }
-                  ]}
+                  style={{
+                    ...styles.urgencyButton,
+                    borderColor: level.color,
+                    backgroundColor: selectedUrgency === level.value ? level.color : 'transparent'
+                  }}
                   onPress={() => {
-                    setSelectedUrgency(level.value);
-                    setValue('urgencyLevel', level.value);
+                    setSelectedUrgency(level.value as 'low' | 'medium' | 'high' | 'critical');
+                    setValue('urgencyLevel', level.value as 'low' | 'medium' | 'high' | 'critical');
                   }}
                   accessibilityLabel={`Niveau d'urgence ${level.label}`}
                   accessibilityHint={`Sélectionne le niveau d'urgence ${level.label}`}
@@ -357,21 +357,21 @@ export default function EmergencyScreen() {
           </ThemedView>
 
           {/* Description */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Description de l'urgence"
+              accessibilityLabel={t('agent.emergency.description')}
             >
-              Description détaillée *
+              {t('agent.emergency.description')} *
             </ThemedText>
             <Controller
               control={control}
               name="description"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Décrivez la situation en détail..."
+                  placeholder={t('agent.emergency.descriptionPlaceholder')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -380,9 +380,9 @@ export default function EmergencyScreen() {
                   fullWidth
                   multiline
                   numberOfLines={5}
-                  accessibilityLabel="Champ description de l'urgence"
-                  accessibilityHint="Décrivez la situation d'urgence en détail"
-                  style={[styles.input, styles.multilineInput]}
+                  accessibilityLabel={t('agent.emergency.description')}
+                  accessibilityHint={t('agent.emergency.description')}
+                  style={{ ...styles.input, ...styles.multilineInput }}
                 />
               )}
             />
@@ -394,29 +394,29 @@ export default function EmergencyScreen() {
           </ThemedView>
 
           {/* Lieu */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Lieu de l'urgence"
+              accessibilityLabel={t('agent.emergency.location')}
             >
-              Lieu de l'urgence *
+              {t('agent.emergency.location')} *
             </ThemedText>
             <Controller
               control={control}
               name="location"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Adresse précise ou lieu"
+                  placeholder={t('agent.emergency.locationPlaceholder')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.location ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ lieu de l'urgence"
-                  accessibilityHint="Indiquez le lieu précis de l'urgence"
+                  accessibilityLabel={t('agent.emergency.location')}
+                  accessibilityHint={t('agent.emergency.location')}
                   style={styles.input}
                 />
               )}
@@ -429,21 +429,21 @@ export default function EmergencyScreen() {
           </ThemedView>
 
           {/* Contact */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Numéro de contact"
+              accessibilityLabel={t('agent.emergency.contactPhone')}
             >
-              Votre numéro de contact *
+              {t('agent.emergency.contactPhone')} *
             </ThemedText>
             <Controller
               control={control}
               name="contactPhone"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Votre numéro de téléphone"
+                  placeholder={t('agent.profile.phone')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -451,8 +451,8 @@ export default function EmergencyScreen() {
                   size="md"
                   fullWidth
                   keyboardType="phone-pad"
-                  accessibilityLabel="Champ numéro de contact"
-                  accessibilityHint="Saisissez votre numéro de téléphone"
+                  accessibilityLabel={t('agent.emergency.contactPhone')}
+                  accessibilityHint={t('agent.profile.phone')}
                   style={styles.input}
                 />
               )}
@@ -472,11 +472,11 @@ export default function EmergencyScreen() {
             size="lg"
             fullWidth
             onPress={() => router.back()}
-            accessibilityLabel="Bouton annuler"
-            accessibilityHint="Annule le signalement et retourne à l'écran précédent"
+            accessibilityLabel={t('common.cancel')}
+            accessibilityHint={t('common.cancel')}
             style={styles.button}
           >
-            Annuler
+            {t('common.cancel')}
           </ThemedButton>
           
           <ThemedButton
@@ -485,38 +485,37 @@ export default function EmergencyScreen() {
             fullWidth
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid || isSending}
-            style={[styles.button, { backgroundColor: theme.colors.error }]}
-            accessibilityLabel="Bouton envoyer signalement"
-            accessibilityHint="Envoie le signalement d'urgence à l'administration"
+            style={{ ...styles.button, backgroundColor: theme.colors.error }}
+            accessibilityLabel={t('agent.emergency.sendReport')}
+            accessibilityHint={t('agent.emergency.sendReport')}
           >
-            {isSending ? 'Envoi en cours...' : 'Envoyer Signalement'}
+            {isSending ? t('agent.emergency.sending') : t('agent.emergency.sendReport')}
           </ThemedButton>
         </ThemedView>
 
         {/* Avertissement */}
-        <ThemedCard style={[styles.warningCard, { backgroundColor: 'rgba(220, 53, 69, 0.1)', borderLeftWidth: 4, borderLeftColor: theme.colors.error }]}>
+        <ThemedCard style={{ ...styles.warningCard, backgroundColor: 'rgba(220, 53, 69, 0.1)', borderLeftWidth: 4, borderLeftColor: theme.colors.error }}>
           <FontAwesome 
             name="warning" 
             size={20} 
             color={theme.colors.error} 
             style={styles.warningIcon}
           />
-          <ThemedView style={styles.warningContent}>
+          <ThemedView variant="transparent" style={styles.warningContent}>
             <ThemedText 
               size="base" 
               weight="semibold"
               style={{ color: theme.colors.error }}
-              accessibilityLabel="Avertissement important"
+              accessibilityLabel={t('agent.emergency.warning')}
             >
-              ⚠️ Avertissement important
+              ⚠️ {t('agent.emergency.warning')}
             </ThemedText>
             <ThemedText 
               variant="secondary" 
               size="sm"
               style={styles.warningText}
             >
-              Ce signalement sera transmis immédiatement à l'administration. 
-              En cas de danger imminent, appelez d'abord les numéros d'urgence appropriés.
+              {t('agent.emergency.warningText')}
             </ThemedText>
           </ThemedView>
         </ThemedCard>

@@ -23,7 +23,7 @@ interface ThemedTextProps extends Omit<TextStyle, 'color'> {
 
 interface ThemedViewProps extends ViewStyle {
   children: React.ReactNode;
-  variant?: 'background' | 'surface' | 'surfaceVariant';
+  variant?: 'background' | 'surface' | 'surfaceVariant' | 'transparent';
   accessibilityLabel?: string;
   style?: ViewStyle;
 }
@@ -96,6 +96,8 @@ export function ThemedView({
   const theme = useTheme();
   
   const getBackgroundColor = () => {
+    if (variant === 'transparent') return 'transparent';
+    
     switch (variant) {
       case 'background': return theme.colors.background;
       case 'surface': return theme.colors.surface;
@@ -104,9 +106,23 @@ export function ThemedView({
     }
   };
   
-  const viewStyle: ViewStyle = {
-    backgroundColor: getBackgroundColor(),
+  // Si backgroundColor est défini dans style, il prend priorité
+  const viewStyle: ViewStyle = {};
+  
+  // Vérifier si backgroundColor est déjà défini dans style
+  // style peut être un objet, un tableau, ou undefined
+  const hasBackgroundColorInStyle = () => {
+    if (!style) return false;
+    if (Array.isArray(style)) {
+      return style.some(s => s && typeof s === 'object' && 'backgroundColor' in s);
+    }
+    return typeof style === 'object' && 'backgroundColor' in style;
   };
+  
+  // Seulement ajouter backgroundColor si pas défini dans style
+  if (!hasBackgroundColorInStyle()) {
+    viewStyle.backgroundColor = getBackgroundColor();
+  }
   
   return (
     <RNView

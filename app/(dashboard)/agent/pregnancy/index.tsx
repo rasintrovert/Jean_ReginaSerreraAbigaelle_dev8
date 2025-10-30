@@ -1,11 +1,12 @@
 import {
-    ThemedButton,
-    ThemedCard,
-    ThemedInput,
-    ThemedText,
-    ThemedView
+  ThemedButton,
+  ThemedCard,
+  ThemedInput,
+  ThemedText,
+  ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,6 +33,7 @@ export default function PregnancyRegistration() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [isGeneratingProof, setIsGeneratingProof] = useState(false);
 
   const {
@@ -50,17 +52,17 @@ export default function PregnancyRegistration() {
       console.log('Données grossesse:', data);
       
       Alert.alert(
-        'Succès',
-        'Grossesse enregistrée avec succès !',
+        t('common.success'),
+        t('agent.pregnancy.saved'),
         [
           {
-            text: 'OK',
+            text: t('common.confirm'),
             onPress: () => router.back(),
           },
         ]
       );
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'enregistrer la grossesse');
+      Alert.alert(t('common.error'), t('errors.saveFailed'));
     }
   };
 
@@ -72,24 +74,24 @@ export default function PregnancyRegistration() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       Alert.alert(
-        'Preuve générée',
-        'Un QR code et un PDF provisoire ont été générés pour les parents.',
+        t('agent.pregnancy.proofGenerated'),
+        t('agent.pregnancy.proofGenerated'),
         [
           {
-            text: 'Voir la preuve',
+            text: t('agent.history.viewProof'),
             onPress: () => {
               // TODO: Ouvrir la preuve générée
               console.log('Ouvrir preuve générée');
             },
           },
           {
-            text: 'OK',
+            text: t('common.confirm'),
             style: 'cancel',
           },
         ]
       );
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de générer la preuve');
+      Alert.alert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsGeneratingProof(false);
     }
@@ -108,27 +110,27 @@ export default function PregnancyRegistration() {
       >
         {/* Header */}
         <ThemedCard style={styles.headerCard}>
-          <ThemedView style={styles.headerContent}>
+          <ThemedView variant="transparent" style={styles.headerContent}>
             <FontAwesome 
               name="heart" 
               size={isTablet ? 40 : 32} 
               color={theme.colors.success} 
             />
-            <ThemedView style={styles.headerText}>
+            <ThemedView variant="transparent" style={styles.headerText}>
               <ThemedText 
                 size="xl" 
                 weight="bold" 
                 style={styles.title}
-                accessibilityLabel="Enregistrement de grossesse"
+                accessibilityLabel={t('agent.pregnancy.title')}
               >
-                Enregistrer Grossesse
+                {t('agent.pregnancy.title')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
-                accessibilityLabel="Formulaire pour enregistrer une nouvelle grossesse"
+                accessibilityLabel={t('agent.pregnancy.subtitle')}
               >
-                Nouvelle grossesse
+                {t('agent.pregnancy.subtitle')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -140,35 +142,35 @@ export default function PregnancyRegistration() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations de la mère"
+            accessibilityLabel={t('agent.pregnancy.subtitle')}
           >
-            Informations de la mère
+            {t('agent.pregnancy.subtitle')}
           </ThemedText>
 
           {/* Prénom */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Prénom de la mère"
+              accessibilityLabel={t('agent.profile.firstName')}
             >
-              Prénom *
+              {t('agent.profile.firstName')} *
             </ThemedText>
             <Controller
               control={control}
               name="motherFirstName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Prénom de la mère"
+                  placeholder={t('agent.profile.firstName')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.motherFirstName ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ prénom de la mère"
-                  accessibilityHint="Saisissez le prénom de la mère"
+                  accessibilityLabel={t('agent.profile.firstName')}
+                  accessibilityHint={t('agent.profile.firstName')}
                   style={styles.input}
                 />
               )}
@@ -181,29 +183,29 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Nom */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Nom de famille de la mère"
+              accessibilityLabel={t('agent.profile.lastName')}
             >
-              Nom de famille *
+              {t('agent.profile.lastName')} *
             </ThemedText>
             <Controller
               control={control}
               name="motherLastName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Nom de famille de la mère"
+                  placeholder={t('agent.profile.lastName')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   variant={errors.motherLastName ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ nom de famille de la mère"
-                  accessibilityHint="Saisissez le nom de famille de la mère"
+                  accessibilityLabel={t('agent.profile.lastName')}
+                  accessibilityHint={t('agent.profile.lastName')}
                   style={styles.input}
                 />
               )}
@@ -216,14 +218,14 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Date de naissance */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Date de naissance de la mère"
+              accessibilityLabel={t('agent.pregnancy.motherDob')}
             >
-              Date de naissance *
+              {t('agent.pregnancy.motherDob')} *
             </ThemedText>
             <Controller
               control={control}
@@ -237,8 +239,8 @@ export default function PregnancyRegistration() {
                   variant={errors.motherBirthDate ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ date de naissance de la mère"
-                  accessibilityHint="Saisissez la date de naissance au format JJ/MM/AAAA"
+                  accessibilityLabel={t('agent.pregnancy.motherDob')}
+                  accessibilityHint={t('agent.pregnancy.motherDob')}
                   style={styles.input}
                 />
               )}
@@ -251,21 +253,21 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Contact */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Contact de la mère"
+              accessibilityLabel={t('agent.pregnancy.contact')}
             >
-              Contact (téléphone) *
+              {t('agent.pregnancy.contact')} *
             </ThemedText>
             <Controller
               control={control}
               name="motherContact"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Numéro de téléphone"
+                  placeholder={t('agent.profile.phone')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -273,8 +275,8 @@ export default function PregnancyRegistration() {
                   size="md"
                   fullWidth
                   keyboardType="phone-pad"
-                  accessibilityLabel="Champ contact téléphone de la mère"
-                  accessibilityHint="Saisissez le numéro de téléphone de la mère"
+                  accessibilityLabel={t('agent.pregnancy.contact')}
+                  accessibilityHint={t('agent.profile.phone')}
                   style={styles.input}
                 />
               )}
@@ -287,21 +289,21 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Adresse */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Adresse de la mère"
+              accessibilityLabel={t('agent.pregnancy.address')}
             >
-              Adresse *
+              {t('agent.pregnancy.address')} *
             </ThemedText>
             <Controller
               control={control}
               name="motherAddress"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Adresse complète"
+                  placeholder={t('agent.profile.address')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -310,9 +312,9 @@ export default function PregnancyRegistration() {
                   fullWidth
                   multiline
                   numberOfLines={3}
-                  accessibilityLabel="Champ adresse de la mère"
-                  accessibilityHint="Saisissez l'adresse complète de la mère"
-                  style={[styles.input, styles.multilineInput]}
+                  accessibilityLabel={t('agent.pregnancy.address')}
+                  accessibilityHint={t('agent.pregnancy.address')}
+                  style={{ ...styles.input, ...styles.multilineInput }}
                 />
               )}
             />
@@ -324,14 +326,14 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Date prévue d'accouchement */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Date prévue d'accouchement"
+              accessibilityLabel={t('agent.pregnancy.estimatedDelivery')}
             >
-              Date prévue d'accouchement *
+              {t('agent.pregnancy.estimatedDelivery')} *
             </ThemedText>
             <Controller
               control={control}
@@ -345,8 +347,8 @@ export default function PregnancyRegistration() {
                   variant={errors.expectedDeliveryDate ? 'error' : 'default'}
                   size="md"
                   fullWidth
-                  accessibilityLabel="Champ date prévue d'accouchement"
-                  accessibilityHint="Saisissez la date prévue d'accouchement au format JJ/MM/AAAA"
+                  accessibilityLabel={t('agent.pregnancy.estimatedDelivery')}
+                  accessibilityHint={t('agent.pregnancy.estimatedDelivery')}
                   style={styles.input}
                 />
               )}
@@ -359,21 +361,21 @@ export default function PregnancyRegistration() {
           </ThemedView>
 
           {/* Notes */}
-          <ThemedView style={styles.inputContainer}>
+          <ThemedView variant="transparent" style={styles.inputContainer}>
             <ThemedText 
               size="sm" 
               weight="medium" 
               style={styles.label}
-              accessibilityLabel="Notes additionnelles"
+              accessibilityLabel={t('agent.pregnancy.notes')}
             >
-              Notes (optionnel)
+              {t('agent.pregnancy.notes')} ({t('common.optional')})
             </ThemedText>
             <Controller
               control={control}
               name="notes"
               render={({ field: { onChange, onBlur, value } }) => (
                 <ThemedInput
-                  placeholder="Informations supplémentaires..."
+                  placeholder={t('agent.pregnancy.notes')}
                   value={value}
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -382,9 +384,9 @@ export default function PregnancyRegistration() {
                   fullWidth
                   multiline
                   numberOfLines={4}
-                  accessibilityLabel="Champ notes additionnelles"
-                  accessibilityHint="Saisissez des informations supplémentaires si nécessaire"
-                  style={[styles.input, styles.multilineInput]}
+                  accessibilityLabel={t('agent.pregnancy.notes')}
+                  accessibilityHint={t('agent.pregnancy.notes')}
+                  style={{ ...styles.input, ...styles.multilineInput }}
                 />
               )}
             />
@@ -398,11 +400,11 @@ export default function PregnancyRegistration() {
             size="lg"
             fullWidth
             onPress={() => router.back()}
-            accessibilityLabel="Bouton annuler"
-            accessibilityHint="Annule la saisie et retourne à l'écran précédent"
+            accessibilityLabel={t('common.cancel')}
+            accessibilityHint={t('common.cancel')}
             style={styles.button}
           >
-            Annuler
+            {t('common.cancel')}
           </ThemedButton>
           
           <ThemedButton
@@ -411,11 +413,11 @@ export default function PregnancyRegistration() {
             fullWidth
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid}
-            accessibilityLabel="Bouton enregistrer"
-            accessibilityHint="Enregistre les informations de grossesse"
+            accessibilityLabel={t('common.save')}
+            accessibilityHint={t('common.save')}
             style={styles.button}
           >
-            Enregistrer
+            {t('common.save')}
           </ThemedButton>
 
           <ThemedButton
@@ -424,11 +426,11 @@ export default function PregnancyRegistration() {
             fullWidth
             onPress={generateProof}
             disabled={!isValid || isGeneratingProof}
-            accessibilityLabel="Bouton générer preuve"
-            accessibilityHint="Génère une preuve provisoire PDF/QR code pour les parents"
+            accessibilityLabel={t('agent.pregnancy.generateProof')}
+            accessibilityHint={t('agent.pregnancy.generateProof')}
             style={styles.button}
           >
-            {isGeneratingProof ? 'Génération...' : 'Générer Preuve'}
+            {isGeneratingProof ? t('common.loading') : t('agent.pregnancy.generateProof')}
           </ThemedButton>
         </ThemedView>
 
@@ -439,7 +441,7 @@ export default function PregnancyRegistration() {
               size="base" 
               weight="semibold" 
               style={styles.summaryTitle}
-              accessibilityLabel="Résumé des données saisies"
+              accessibilityLabel="Résumé"
             >
               Résumé
             </ThemedText>
@@ -449,7 +451,7 @@ export default function PregnancyRegistration() {
             </ThemedText>
             {formData.expectedDeliveryDate && (
               <ThemedText variant="secondary" size="sm" style={styles.summaryText}>
-                Accouchement prévu le: {formData.expectedDeliveryDate}
+                {t('agent.pregnancy.estimatedDelivery')}: {formData.expectedDeliveryDate}
               </ThemedText>
             )}
           </ThemedCard>

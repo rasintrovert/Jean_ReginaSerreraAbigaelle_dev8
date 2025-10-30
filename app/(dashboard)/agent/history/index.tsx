@@ -6,6 +6,7 @@ import {
   ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -26,6 +27,7 @@ export default function AgentHistory() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'pregnancy' | 'birth'>('all');
@@ -85,7 +87,7 @@ export default function AgentHistory() {
   };
 
   const getTypeLabel = (type: Proof['type']) => {
-    return type === 'pregnancy' ? 'Preuve de Grossesse' : 'Preuve de Naissance';
+    return type === 'pregnancy' ? t('agent.history.proofType.pregnancy') : t('agent.history.proofType.birth');
   };
 
   const getStatusColor = (status: Proof['status']) => {
@@ -93,7 +95,7 @@ export default function AgentHistory() {
   };
 
   const getStatusLabel = (status: Proof['status']) => {
-    return status === 'valid' ? 'Valide' : 'En attente';
+    return status === 'valid' ? t('agent.history.statusValid') : t('agent.history.statusPending');
   };
 
   const handleBackPress = () => {
@@ -106,19 +108,19 @@ export default function AgentHistory() {
 
   const handleViewProof = (proof: Proof) => {
     Alert.alert(
-      'Preuve',
-      `Type: ${getTypeLabel(proof.type)}\n` +
-      `Référence: ${proof.referenceNumber}\n` +
-      `Date: ${proof.generationDate}\n` +
-      `Statut: ${getStatusLabel(proof.status)}`,
+      t('agent.history.title'),
+      `${t('agent.history.filterType')}: ${getTypeLabel(proof.type)}\n` +
+      `${t('agent.history.reference')}: ${proof.referenceNumber}\n` +
+      `${t('agent.history.generationDate')}: ${proof.generationDate}\n` +
+      `${t('agent.history.filterStatus')}: ${getStatusLabel(proof.status)}`,
       [
-        { text: 'Fermer', style: 'cancel' },
+        { text: t('common.close'), style: 'cancel' },
         { 
-          text: 'Télécharger', 
+          text: t('common.save'), 
           onPress: () => {
             // TODO: Télécharger la preuve
             console.log('Télécharger preuve:', proof.id);
-            Alert.alert('Succès', 'Preuve téléchargée !');
+            Alert.alert(t('common.success'), t('agent.history.viewProof'));
           }
         }
       ]
@@ -136,8 +138,8 @@ export default function AgentHistory() {
         <TouchableOpacity
           style={styles.backButton}
           onPress={handleBackPress}
-          accessibilityLabel="Retour"
-          accessibilityHint="Retourner à la page précédente"
+          accessibilityLabel={t('common.back')}
+          accessibilityHint={t('common.back')}
         >
           <FontAwesome 
             name="arrow-left" 
@@ -151,14 +153,14 @@ export default function AgentHistory() {
           weight="bold" 
           style={styles.headerTitle}
         >
-          Prèv Mwen yo
+          {t('agent.history.title')}
         </ThemedText>
         
         <TouchableOpacity
           style={styles.filterButton}
           onPress={handleFilterPress}
-          accessibilityLabel="Filtrer"
-          accessibilityHint="Ouvrir les options de filtrage"
+          accessibilityLabel={t('common.filter')}
+          accessibilityHint={t('agent.history.filters')}
         >
           <FontAwesome 
             name="filter" 
@@ -177,7 +179,7 @@ export default function AgentHistory() {
       >
         {/* 2️⃣ Zone de recherche */}
         <ThemedCard style={styles.searchCard}>
-          <ThemedView style={styles.searchContainer}>
+          <ThemedView style={{ ...styles.searchContainer, backgroundColor: theme.colors.background }}>
             <FontAwesome 
               name="search" 
               size={16} 
@@ -185,13 +187,13 @@ export default function AgentHistory() {
               style={styles.searchIcon}
             />
             <ThemedInput
-              placeholder="Chache..."
+              placeholder={t('agent.history.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
               size="md"
               style={styles.searchInput}
-              accessibilityLabel="Rechercher"
-              accessibilityHint="Rechercher dans les preuves"
+              accessibilityLabel={t('common.search')}
+              accessibilityHint={t('agent.history.searchHint')}
             />
           </ThemedView>
         </ThemedCard>
@@ -203,7 +205,7 @@ export default function AgentHistory() {
             weight="semibold" 
             style={styles.sectionTitle}
           >
-            Resan ({filteredProofs.length})
+            {t('agent.history.title')} ({filteredProofs.length})
           </ThemedText>
           
           {filteredProofs.length === 0 ? (
@@ -219,14 +221,14 @@ export default function AgentHistory() {
                 size="base"
                 style={styles.emptyText}
               >
-                Aucune preuve trouvée
+                {t('agent.history.noProofs')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
                 style={styles.emptySubtext}
               >
-                Modifiez vos critères de recherche
+                {t('agent.history.searchHint')}
               </ThemedText>
             </ThemedCard>
           ) : (
@@ -236,7 +238,7 @@ export default function AgentHistory() {
                 style={styles.proofCard}
               >
                 {/* a) En-tête de la carte */}
-                <ThemedView style={styles.proofHeader}>
+                <ThemedView style={{ ...styles.proofHeader, backgroundColor: 'transparent' }}>
                   <ThemedView style={{ ...styles.proofIcon, backgroundColor: getTypeColor(proof.type) + '20' }}>
                     <FontAwesome 
                       name={getTypeIcon(proof.type)} 
@@ -244,7 +246,7 @@ export default function AgentHistory() {
                       color={getTypeColor(proof.type)} 
                     />
                   </ThemedView>
-                  <ThemedView style={styles.proofTypeContainer}>
+                  <ThemedView style={{ ...styles.proofTypeContainer, backgroundColor: 'transparent' }}>
                     <ThemedText 
                       size="base" 
                       weight="semibold"
@@ -265,8 +267,8 @@ export default function AgentHistory() {
                 </ThemedView>
 
                 {/* b) Contenu principal (données essentielles) */}
-                <ThemedView style={styles.proofContent}>
-                  <ThemedView style={styles.proofInfoRow}>
+                <ThemedView style={{ ...styles.proofContent, backgroundColor: 'transparent' }}>
+                  <ThemedView style={{ ...styles.proofInfoRow, backgroundColor: 'transparent' }}>
                     <FontAwesome 
                       name="hashtag" 
                       size={14} 
@@ -282,7 +284,7 @@ export default function AgentHistory() {
                     </ThemedText>
                   </ThemedView>
                   
-                  <ThemedView style={styles.proofInfoRow}>
+                  <ThemedView style={{ ...styles.proofInfoRow, backgroundColor: 'transparent' }}>
                     <FontAwesome 
                       name="calendar" 
                       size={14} 
@@ -294,11 +296,11 @@ export default function AgentHistory() {
                       size="sm"
                       style={styles.infoText}
                     >
-                      Générée le {proof.generationDate}
+                      {t('agent.history.generationDate')}: {proof.generationDate}
                     </ThemedText>
                   </ThemedView>
                   
-                  <ThemedView style={styles.proofInfoRow}>
+                  <ThemedView style={{ ...styles.proofInfoRow, backgroundColor: 'transparent' }}>
                     <FontAwesome 
                       name="user" 
                       size={14} 
@@ -310,24 +312,24 @@ export default function AgentHistory() {
                       size="sm"
                       style={styles.infoText}
                     >
-                      Agent: {proof.agentName}
+                      {t('agent.history.agent')}: {proof.agentName}
                     </ThemedText>
                   </ThemedView>
                 </ThemedView>
 
                 {/* c) Bouton d'action */}
-                <ThemedView style={styles.proofActions}>
+                <ThemedView style={{ ...styles.proofActions, backgroundColor: 'transparent' }}>
                   <ThemedButton
                     variant="outline"
                     size="sm"
                     onPress={() => handleViewProof(proof)}
-                    accessibilityLabel="Voir la preuve"
-                    accessibilityHint="Ouvrir la preuve complète"
+                    accessibilityLabel={t('agent.history.viewProof')}
+                    accessibilityHint={t('agent.history.viewProof')}
                     style={styles.viewProofButton}
                   >
                     <FontAwesome name="eye" size={12} color={theme.colors.primary} />
                     <ThemedText size="xs" style={{ color: theme.colors.primary, marginLeft: 6 }}>
-                      Gade Prèv
+                      {t('agent.history.viewProof')}
                     </ThemedText>
                   </ThemedButton>
                 </ThemedView>
@@ -345,28 +347,28 @@ export default function AgentHistory() {
         onRequestClose={() => setShowFilterModal(false)}
       >
         <ThemedView style={styles.modalOverlay}>
-          <ThemedView style={styles.modalContent}>
+          <ThemedView style={{ ...styles.modalContent, backgroundColor: theme.colors.surface }}>
             <ThemedText 
               size="lg" 
               weight="bold" 
               style={styles.modalTitle}
             >
-              Filtrer les preuves
+              {t('agent.history.filters')}
             </ThemedText>
             
-            <ThemedView style={styles.filterSection}>
+            <ThemedView style={{ ...styles.filterSection, backgroundColor: 'transparent' }}>
               <ThemedText 
                 size="base" 
                 weight="semibold" 
                 style={styles.filterSectionTitle}
               >
-                Type
+                {t('agent.history.filterType')}
               </ThemedText>
-              <ThemedView style={styles.filterButtons}>
+              <ThemedView style={{ ...styles.filterButtons, backgroundColor: 'transparent' }}>
                 {[
-                  { key: 'all', label: 'Tous' },
-                  { key: 'pregnancy', label: 'Grossesse' },
-                  { key: 'birth', label: 'Naissance' },
+                  { key: 'all', label: t('agent.history.typeAll') },
+                  { key: 'pregnancy', label: t('agent.history.typePregnancy') },
+                  { key: 'birth', label: t('agent.history.typeBirth') },
                 ].map((filter) => (
                   <ThemedButton
                     key={filter.key}
@@ -389,19 +391,19 @@ export default function AgentHistory() {
               </ThemedView>
             </ThemedView>
 
-            <ThemedView style={styles.filterSection}>
+            <ThemedView style={{ ...styles.filterSection, backgroundColor: 'transparent' }}>
               <ThemedText 
                 size="base" 
                 weight="semibold" 
                 style={styles.filterSectionTitle}
               >
-                Statut
+                {t('agent.history.filterStatus')}
               </ThemedText>
-              <ThemedView style={styles.filterButtons}>
+              <ThemedView style={{ ...styles.filterButtons, backgroundColor: 'transparent' }}>
                 {[
-                  { key: 'all', label: 'Tous' },
-                  { key: 'valid', label: 'Valide' },
-                  { key: 'pending', label: 'En attente' },
+                  { key: 'all', label: t('agent.history.statusAll') },
+                  { key: 'valid', label: t('agent.history.statusValid') },
+                  { key: 'pending', label: t('agent.history.statusPending') },
                 ].map((filter) => (
                   <ThemedButton
                     key={filter.key}
@@ -424,7 +426,7 @@ export default function AgentHistory() {
               </ThemedView>
             </ThemedView>
 
-            <ThemedView style={styles.modalActions}>
+            <ThemedView style={{ ...styles.modalActions, backgroundColor: 'transparent' }}>
               <ThemedButton
                 variant="outline"
                 size="md"
@@ -432,7 +434,7 @@ export default function AgentHistory() {
                 style={styles.modalCancelButton}
               >
                 <ThemedText size="sm" style={{ color: theme.colors.textSecondary }}>
-                  Annuler
+                  {t('common.cancel')}
                 </ThemedText>
               </ThemedButton>
               <ThemedButton
@@ -442,7 +444,7 @@ export default function AgentHistory() {
                 style={styles.modalApplyButton}
               >
                 <ThemedText size="sm" style={{ color: '#fff' }}>
-                  Appliquer
+                  {t('common.confirm')}
                 </ThemedText>
               </ThemedButton>
             </ThemedView>
@@ -506,7 +508,6 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -625,7 +626,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 24,

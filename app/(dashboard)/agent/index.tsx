@@ -5,6 +5,7 @@ import {
   ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,6 +16,7 @@ export default function AgentDashboard() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [showAddModal, setShowAddModal] = useState(false);
 
   const handleQuickAction = (action: string) => {
@@ -110,9 +112,9 @@ export default function AgentDashboard() {
                 size="lg" 
                 weight="bold" 
                 style={styles.welcomeText}
-                accessibilityLabel="Bienvenue"
+                accessibilityLabel={t('agent.dashboard.welcome')}
               >
-                Byenveni
+                {t('agent.dashboard.welcome')}
               </ThemedText>
               <ThemedText 
                 size="base" 
@@ -137,8 +139,8 @@ export default function AgentDashboard() {
             <TouchableOpacity
               style={styles.headerIconButton}
               onPress={handleNotificationPress}
-              accessibilityLabel="Notifications"
-              accessibilityHint="Voir les notifications"
+              accessibilityLabel={t('agent.profile.notifications')}
+              accessibilityHint={t('agent.profile.notifications')}
             >
               <FontAwesome 
                 name="bell" 
@@ -149,8 +151,8 @@ export default function AgentDashboard() {
             <TouchableOpacity
               style={styles.headerIconButton}
               onPress={handleSettingsPress}
-              accessibilityLabel="Paramètres"
-              accessibilityHint="Ouvrir les paramètres"
+              accessibilityLabel={t('agent.profile.tabs.settings')}
+              accessibilityHint={t('agent.profile.tabs.settings')}
             >
               <FontAwesome 
                 name="cog" 
@@ -167,9 +169,9 @@ export default function AgentDashboard() {
             size="xl" 
             weight="bold" 
             style={styles.mainTitle}
-            accessibilityLabel="Actions rapides"
+            accessibilityLabel={t('agent.dashboard.quickActions')}
           >
-            Aksyon Rapid
+            {t('agent.dashboard.quickActions')}
           </ThemedText>
           <ThemedView style={styles.connectionStatus}>
             <FontAwesome 
@@ -181,9 +183,9 @@ export default function AgentDashboard() {
               variant="secondary" 
               size="sm"
               style={styles.statusText}
-              accessibilityLabel="État de connexion"
+              accessibilityLabel={t('agent.dashboard.connected')}
             >
-              Sou Entènèt
+              {t('agent.dashboard.connected')}
             </ThemedText>
           </ThemedView>
         </ThemedView>
@@ -191,10 +193,10 @@ export default function AgentDashboard() {
         {/* 3️⃣ Bloc des actions principales */}
         <ThemedView style={styles.mainActionsContainer}>
           <TouchableOpacity
-            style={styles.mainActionCard}
+            style={{ ...styles.mainActionCard, backgroundColor: theme.colors.surface }}
             onPress={() => handleQuickAction('pregnancy')}
-            accessibilityLabel="Enregistrer Grossesse"
-            accessibilityHint="Enregistrer une nouvelle grossesse"
+            accessibilityLabel={t('agent.dashboard.registerPregnancy')}
+            accessibilityHint={t('agent.pregnancy.subtitle')}
           >
             <ThemedView style={{ ...styles.actionIconContainer, backgroundColor: theme.colors.success + '20' }}>
               <FontAwesome 
@@ -208,15 +210,15 @@ export default function AgentDashboard() {
               weight="semibold"
               style={styles.actionTitle}
             >
-              Anrejistre Gwosès
+              {t('agent.dashboard.registerPregnancy')}
             </ThemedText>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.mainActionCard}
+            style={{ ...styles.mainActionCard, backgroundColor: theme.colors.surface }}
             onPress={() => handleQuickAction('birth')}
-            accessibilityLabel="Enregistrer Naissance"
-            accessibilityHint="Enregistrer une nouvelle naissance"
+            accessibilityLabel={t('agent.dashboard.registerBirth')}
+            accessibilityHint={t('agent.birth.subtitle')}
           >
             <ThemedView style={{ ...styles.actionIconContainer, backgroundColor: theme.colors.primary + '20' }}>
               <FontAwesome 
@@ -230,20 +232,20 @@ export default function AgentDashboard() {
               weight="semibold"
               style={styles.actionTitle}
             >
-              Anrejistre Nesans
+              {t('agent.dashboard.registerBirth')}
             </ThemedText>
           </TouchableOpacity>
         </ThemedView>
 
         {/* 4️⃣ Bloc secondaire - Prèv Mwen yo */}
         <TouchableOpacity
-          style={styles.secondaryCard}
+          style={{ ...styles.secondaryCard, backgroundColor: theme.colors.surface }}
           onPress={handleProofsPress}
-          accessibilityLabel="Mes Preuves"
-          accessibilityHint="Voir mes preuves générées"
+          accessibilityLabel={t('agent.dashboard.myProofs')}
+          accessibilityHint={t('agent.history.title')}
         >
-          <ThemedView style={styles.secondaryContent}>
-            <ThemedView style={styles.secondaryIconContainer}>
+          <ThemedView style={{ ...styles.secondaryContent, backgroundColor: 'transparent' }}>
+            <ThemedView style={{ ...styles.secondaryIconContainer, backgroundColor: 'transparent' }}>
               <FontAwesome 
                 name="file-text-o" 
                 size={isTablet ? 32 : 28} 
@@ -259,20 +261,20 @@ export default function AgentDashboard() {
                 </ThemedText>
               </ThemedView>
             </ThemedView>
-            <ThemedView style={styles.secondaryText}>
+            <ThemedView style={{ ...styles.secondaryText, backgroundColor: 'transparent' }}>
               <ThemedText 
                 size="lg" 
                 weight="semibold"
                 style={styles.secondaryTitle}
               >
-                Prèv Mwen yo
+                {t('agent.dashboard.myProofs')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
                 style={styles.secondarySubtitle}
               >
-                Preuves générées récemment
+                {t('agent.dashboard.proofsCount', { count: 4 })}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -280,20 +282,20 @@ export default function AgentDashboard() {
 
         {/* 5️⃣ Bloc informatif / message d'aide */}
         <ThemedCard style={styles.infoCard}>
-          <ThemedView style={styles.infoContent}>
+          <ThemedView style={{ ...styles.infoContent, backgroundColor: 'transparent' }}>
             <FontAwesome 
               name="info-circle" 
               size={20} 
               color={theme.colors.info} 
               style={styles.infoIcon}
             />
-            <ThemedView style={styles.infoText}>
+            <ThemedView style={{ ...styles.infoText, backgroundColor: 'transparent' }}>
               <ThemedText 
                 size="sm" 
                 weight="medium"
                 style={styles.infoMessage}
               >
-                Ou ka anrejistre gwosès ak nesans, epi jenere prev provizwa pou paran yo.
+                {t('agent.dashboard.infoMessage')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -301,25 +303,25 @@ export default function AgentDashboard() {
             variant="outline"
             size="sm"
             onPress={handleHelpPress}
-            accessibilityLabel="Aide"
-            accessibilityHint="Ouvrir l'aide"
+            accessibilityLabel={t('agent.dashboard.help')}
+            accessibilityHint={t('agent.help.title')}
             style={styles.helpButton}
           >
             <FontAwesome name="question-circle" size={14} color={theme.colors.primary} />
             <ThemedText size="sm" style={{ color: theme.colors.primary, marginLeft: 6 }}>
-              Èd
+              {t('agent.dashboard.help')}
             </ThemedText>
           </ThemedButton>
         </ThemedCard>
       </ScrollView>
 
       {/* 6️⃣ Barre de navigation inférieure */}
-      <ThemedView style={styles.bottomNavigation}>
+      <ThemedView style={{ ...styles.bottomNavigation, backgroundColor: theme.colors.surface, borderTopColor: theme.colors.border }}>
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => handleBottomNavPress('home')}
-          accessibilityLabel="Accueil"
-          accessibilityHint="Retour à l'accueil"
+          accessibilityLabel={t('agent.navigation.home')}
+          accessibilityHint={t('agent.navigation.home')}
         >
           <FontAwesome 
             name="home" 
@@ -331,15 +333,15 @@ export default function AgentDashboard() {
             weight="medium"
             style={{ ...styles.navLabel, color: theme.colors.primary }}
           >
-            Akèy
+            {t('agent.navigation.home')}
           </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => handleBottomNavPress('history')}
-          accessibilityLabel="Historique"
-          accessibilityHint="Voir l'historique"
+          accessibilityLabel={t('agent.navigation.history')}
+          accessibilityHint={t('agent.navigation.history')}
         >
           <FontAwesome 
             name="history" 
@@ -352,15 +354,15 @@ export default function AgentDashboard() {
             weight="medium"
             style={styles.navLabel}
           >
-            Istwa
+            {t('agent.navigation.history')}
           </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItemCenter}
           onPress={() => handleBottomNavPress('add')}
-          accessibilityLabel="Ajouter"
-          accessibilityHint="Ajouter un enregistrement"
+          accessibilityLabel={t('agent.navigation.add')}
+          accessibilityHint={t('agent.navigation.add')}
         >
           <ThemedView style={styles.centerNavIcon}>
             <FontAwesome 
@@ -374,15 +376,15 @@ export default function AgentDashboard() {
             weight="medium"
             style={{ ...styles.navLabel, color: theme.colors.primary }}
           >
-            Ajoute
+            {t('agent.navigation.add')}
           </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => handleBottomNavPress('emergency')}
-          accessibilityLabel="Urgence"
-          accessibilityHint="Signaler une urgence"
+          accessibilityLabel={t('agent.navigation.emergency')}
+          accessibilityHint={t('agent.navigation.emergency')}
         >
           <FontAwesome 
             name="exclamation-triangle" 
@@ -394,15 +396,15 @@ export default function AgentDashboard() {
             weight="medium"
             style={{ ...styles.navLabel, color: theme.colors.error }}
           >
-            Ijans
+            {t('agent.navigation.emergency')}
           </ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => handleBottomNavPress('profile')}
-          accessibilityLabel="Profil"
-          accessibilityHint="Ouvrir le profil"
+          accessibilityLabel={t('agent.navigation.profile')}
+          accessibilityHint={t('agent.navigation.profile')}
         >
           <FontAwesome 
             name="user" 
@@ -415,7 +417,7 @@ export default function AgentDashboard() {
             weight="medium"
             style={styles.navLabel}
           >
-            Pwofil
+            {t('agent.navigation.profile')}
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>
@@ -428,81 +430,81 @@ export default function AgentDashboard() {
         onRequestClose={() => setShowAddModal(false)}
       >
         <ThemedView style={styles.modalOverlay}>
-          <ThemedView style={styles.modalContent}>
+          <ThemedView style={{ ...styles.modalContent, backgroundColor: theme.colors.surface }}>
             <ThemedText 
               size="lg" 
               weight="bold" 
               style={styles.modalTitle}
             >
-              Chwazi Tip Anrejistreman
+              {t('agent.addModal.title')}
             </ThemedText>
             <ThemedText 
               variant="secondary" 
               size="sm" 
               style={styles.modalSubtitle}
             >
-              Chwazi sa ou vle anrejistre
+              {t('agent.addModal.subtitle')}
             </ThemedText>
             
-            <ThemedView style={styles.modalOptions}>
+            <ThemedView variant="transparent" style={styles.modalOptions}>
               <TouchableOpacity
-                style={styles.modalOption}
+                style={{ ...styles.modalOption, backgroundColor: theme.colors.background, borderColor: theme.colors.border }}
                 onPress={() => handleAddOption('pregnancy')}
-                accessibilityLabel="Enregistrer Grossesse"
-                accessibilityHint="Ouvrir le formulaire d'enregistrement de grossesse"
+                accessibilityLabel={t('agent.addModal.registerPregnancy')}
+                accessibilityHint={t('agent.addModal.registerPregnancyDesc')}
               >
-                <ThemedView style={{ ...styles.modalOptionIcon, backgroundColor: theme.colors.success + '20' }}>
+                <ThemedView variant="transparent" style={{ ...styles.modalOptionIcon, backgroundColor: theme.colors.success + '20' }}>
                   <FontAwesome 
                     name="heart" 
                     size={isTablet ? 32 : 28} 
                     color={theme.colors.success} 
                   />
                 </ThemedView>
-                <ThemedView style={styles.modalOptionText}>
+                <ThemedView variant="transparent" style={{ ...styles.modalOptionText, backgroundColor: 'transparent' }}>
                   <ThemedText 
                     size="base" 
                     weight="semibold"
                     style={styles.modalOptionTitle}
                   >
-                    Anrejistre Gwosès
+                    {t('agent.addModal.registerPregnancy')}
                   </ThemedText>
                   <ThemedText 
                     variant="secondary" 
                     size="sm"
                     style={styles.modalOptionSubtitle}
                   >
-                    Enregistrer une nouvelle grossesse
+                    {t('agent.addModal.registerPregnancyDesc')}
                   </ThemedText>
                 </ThemedView>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.modalOption}
+                style={{ ...styles.modalOption, backgroundColor: theme.colors.background, borderColor: theme.colors.border }}
                 onPress={() => handleAddOption('birth')}
-                accessibilityLabel="Enregistrer Naissance"
-                accessibilityHint="Ouvrir le formulaire d'enregistrement de naissance"
+                accessibilityLabel={t('agent.addModal.registerBirth')}
+                accessibilityHint={t('agent.addModal.registerBirthDesc')}
               >
-                <ThemedView style={{ ...styles.modalOptionIcon, backgroundColor: theme.colors.primary + '20' }}>
+                <ThemedView variant="transparent" style={{ ...styles.modalOptionIcon, backgroundColor: theme.colors.primary + '20' }}>
                   <FontAwesome 
                     name="child" 
                     size={isTablet ? 32 : 28} 
                     color={theme.colors.primary} 
                   />
                 </ThemedView>
-                <ThemedView style={styles.modalOptionText}>
+                <ThemedView variant="transparent" style={{ ...styles.modalOptionText, backgroundColor: 'transparent' }}>
                   <ThemedText 
                     size="base" 
                     weight="semibold"
                     style={styles.modalOptionTitle}
                   >
-                    Anrejistre Nesans
+                    {t('agent.addModal.registerBirth')}
                   </ThemedText>
                   <ThemedText 
                     variant="secondary" 
                     size="sm"
                     style={styles.modalOptionSubtitle}
                   >
-                    Enregistrer une nouvelle naissance
+                    {t('agent.addModal.registerBirthDesc')}
                   </ThemedText>
                 </ThemedView>
               </TouchableOpacity>
@@ -512,13 +514,13 @@ export default function AgentDashboard() {
               variant="outline"
               size="md"
               onPress={() => setShowAddModal(false)}
-              accessibilityLabel="Annuler"
-              accessibilityHint="Fermer le menu"
+              accessibilityLabel={t('common.cancel')}
+              accessibilityHint={t('common.close')}
               style={styles.modalCancelButton}
             >
               <FontAwesome name="times" size={14} color={theme.colors.textSecondary} />
               <ThemedText size="sm" style={{ color: theme.colors.textSecondary, marginLeft: 8 }}>
-                Annuler
+                {t('common.cancel')}
               </ThemedText>
             </ThemedButton>
           </ThemedView>
@@ -619,7 +621,6 @@ const styles = StyleSheet.create({
   },
   mainActionCard: {
     flex: 1,
-    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
     alignItems: 'center',
@@ -646,7 +647,7 @@ const styles = StyleSheet.create({
   
   // 4️⃣ Bloc secondaire - Prèv Mwen yo
   secondaryCard: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
@@ -724,9 +725,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#e9ecef',
     paddingVertical: 8,
     paddingHorizontal: 16,
     paddingBottom: 20, // Espace pour le safe area
@@ -770,7 +769,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContent: {
-    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 24,
     width: '100%',
@@ -798,10 +796,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#f8f9fa',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e9ecef',
   },
   modalOptionIcon: {
     width: 50,

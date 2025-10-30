@@ -6,6 +6,8 @@ import {
     ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguageStore } from '@/store/languageStore';
 import { useThemeStore } from '@/store/themeStore';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
@@ -42,6 +44,8 @@ export default function AgentProfile() {
   const theme = useTheme();
   const { isTablet } = useResponsive();
   const { appTheme, setAppTheme } = useThemeStore();
+  const { language, setLanguage } = useLanguageStore();
+  const t = useTranslation();
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'settings'>('profile');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -88,9 +92,9 @@ export default function AgentProfile() {
       // Simulation de sauvegarde
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      Alert.alert('Succès', 'Profil mis à jour avec succès !');
+      Alert.alert(t('common.success'), t('agent.profile.saved'));
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de mettre à jour le profil');
+      Alert.alert(t('common.error'), t('agent.profile.updateError'));
     } finally {
       setIsSaving(false);
     }
@@ -103,10 +107,10 @@ export default function AgentProfile() {
       // Simulation de changement de mot de passe
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      Alert.alert('Succès', 'Mot de passe modifié avec succès !');
+      Alert.alert(t('common.success'), t('agent.profile.passwordChanged'));
       resetPasswordForm();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de modifier le mot de passe');
+      Alert.alert(t('common.error'), t('agent.profile.passwordError'));
     } finally {
       setIsSaving(false);
     }
@@ -114,12 +118,12 @@ export default function AgentProfile() {
 
   const handleLogout = () => {
     Alert.alert(
-      'Déconnexion',
-      'Êtes-vous sûr de vouloir vous déconnecter ?',
+      t('agent.profile.logout'),
+      t('agent.profile.logoutConfirm'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: 'Déconnexion', 
+          text: t('agent.profile.logout'), 
           style: 'destructive',
           onPress: () => {
             // TODO: Implémenter la déconnexion
@@ -131,21 +135,20 @@ export default function AgentProfile() {
   };
 
   const tabs = [
-    { key: 'profile', label: 'Profil', icon: 'user' as const },
-    { key: 'password', label: 'Mot de passe', icon: 'lock' as const },
-    { key: 'settings', label: 'Paramètres', icon: 'cog' as const },
+    { key: 'profile', label: t('agent.profile.tabs.profile'), icon: 'user' as const },
+    { key: 'password', label: t('agent.profile.tabs.password'), icon: 'lock' as const },
+    { key: 'settings', label: t('agent.profile.tabs.settings'), icon: 'cog' as const },
   ];
 
   const languages = [
-    { key: 'kreyol', label: 'Kreyòl' },
-    { key: 'francais', label: 'Français' },
-    { key: 'english', label: 'English' },
+    { key: 'ht', label: 'Kreyòl', code: 'ht' as const },
+    { key: 'fr', label: 'Français', code: 'fr' as const },
   ];
 
   const themes = [
-    { key: 'light', label: 'Clair', icon: 'sun-o' as const },
-    { key: 'dark', label: 'Sombre', icon: 'moon-o' as const },
-    { key: 'system', label: 'Automatique', icon: 'circle-o' as const },
+    { key: 'light', label: t('agent.profile.themes.light'), icon: 'sun-o' as const },
+    { key: 'dark', label: t('agent.profile.themes.dark'), icon: 'moon-o' as const },
+    { key: 'system', label: t('agent.profile.themes.system'), icon: 'circle-o' as const },
   ];
 
   return (
@@ -159,27 +162,27 @@ export default function AgentProfile() {
       >
         {/* Header */}
         <ThemedCard style={styles.headerCard}>
-          <ThemedView style={styles.headerContent}>
+          <ThemedView variant="transparent" style={styles.headerContent}>
             <FontAwesome 
               name="user-circle" 
               size={isTablet ? 60 : 50} 
               color={theme.colors.primary} 
             />
-            <ThemedView style={styles.headerText}>
+            <ThemedView variant="transparent" style={styles.headerText}>
               <ThemedText 
                 size="xl" 
                 weight="bold" 
                 style={styles.title}
-                accessibilityLabel="Profil agent"
+                accessibilityLabel={t('agent.profile.title')}
               >
-                Mon Profil
+                {t('agent.profile.title')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
-                accessibilityLabel="Gestion du profil et des paramètres"
+                accessibilityLabel={t('agent.profile.subtitle')}
               >
-                Profil et paramètres
+                {t('agent.profile.subtitle')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -187,7 +190,7 @@ export default function AgentProfile() {
 
         {/* Onglets */}
         <ThemedCard style={styles.tabsCard}>
-          <ThemedView style={styles.tabsContainer}>
+          <ThemedView variant="transparent" style={styles.tabsContainer}>
             {tabs.map((tab) => (
               <ThemedButton
                 key={tab.key}
@@ -224,33 +227,33 @@ export default function AgentProfile() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations générales"
+            accessibilityLabel={t('agent.profile.generalInfo')}
           >
-            Informations générales
+            {t('agent.profile.generalInfo')}
           </ThemedText>
           
-          <ThemedView style={styles.infoGrid}>
-            <ThemedView style={styles.infoItem}>
+          <ThemedView variant="transparent" style={styles.infoGrid}>
+            <ThemedView variant="transparent" style={styles.infoItem}>
               <ThemedText variant="secondary" size="sm">
-                Rôle
+                {t('agent.profile.role')}
               </ThemedText>
               <ThemedText size="base" weight="medium">
                 {mockProfile.role}
               </ThemedText>
             </ThemedView>
             
-            <ThemedView style={styles.infoItem}>
+            <ThemedView variant="transparent" style={styles.infoItem}>
               <ThemedText variant="secondary" size="sm">
-                Enregistré le
+                {t('agent.profile.registeredOn')}
               </ThemedText>
               <ThemedText size="base" weight="medium">
                 {mockProfile.registrationDate}
               </ThemedText>
             </ThemedView>
             
-            <ThemedView style={styles.infoItem}>
+            <ThemedView variant="transparent" style={styles.infoItem}>
               <ThemedText variant="secondary" size="sm">
-                Total enregistrements
+                {t('agent.profile.totalRecords')}
               </ThemedText>
               <ThemedText size="base" weight="medium" style={{ color: theme.colors.success }}>
                 {mockProfile.totalRecords}
@@ -266,35 +269,35 @@ export default function AgentProfile() {
               size="lg" 
               weight="semibold" 
               style={styles.sectionTitle}
-              accessibilityLabel="Modifier le profil"
+              accessibilityLabel={t('agent.profile.editProfile')}
             >
-              Modifier le profil
+              {t('agent.profile.editProfile')}
             </ThemedText>
 
             {/* Prénom */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Prénom"
+                accessibilityLabel={t('agent.profile.firstName')}
               >
-                Prénom *
+                {t('agent.profile.firstName')} *
               </ThemedText>
               <Controller
                 control={profileControl}
                 name="firstName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Prénom"
+                    placeholder={t('agent.profile.firstName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant={profileErrors.firstName ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ prénom"
-                    accessibilityHint="Modifiez votre prénom"
+                    accessibilityLabel={t('agent.profile.firstName')}
+                    accessibilityHint={t('agent.profile.firstName')}
                     style={styles.input}
                   />
                 )}
@@ -307,29 +310,29 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Nom */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Nom de famille"
+                accessibilityLabel={t('agent.profile.lastName')}
               >
-                Nom de famille *
+                {t('agent.profile.lastName')} *
               </ThemedText>
               <Controller
                 control={profileControl}
                 name="lastName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Nom de famille"
+                    placeholder={t('agent.profile.lastName')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     variant={profileErrors.lastName ? 'error' : 'default'}
                     size="md"
                     fullWidth
-                    accessibilityLabel="Champ nom de famille"
-                    accessibilityHint="Modifiez votre nom de famille"
+                    accessibilityLabel={t('agent.profile.lastName')}
+                    accessibilityHint={t('agent.profile.lastName')}
                     style={styles.input}
                   />
                 )}
@@ -342,21 +345,21 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Email */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Email"
+                accessibilityLabel={t('agent.profile.email')}
               >
-                Email *
+                {t('agent.profile.email')} *
               </ThemedText>
               <Controller
                 control={profileControl}
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Email"
+                    placeholder={t('agent.profile.email')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -364,8 +367,8 @@ export default function AgentProfile() {
                     size="md"
                     fullWidth
                     keyboardType="email-address"
-                    accessibilityLabel="Champ email"
-                    accessibilityHint="Modifiez votre adresse email"
+                    accessibilityLabel={t('agent.profile.email')}
+                    accessibilityHint={t('agent.profile.email')}
                     style={styles.input}
                   />
                 )}
@@ -378,21 +381,21 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Téléphone */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Téléphone"
+                accessibilityLabel={t('agent.profile.phone')}
               >
-                Téléphone *
+                {t('agent.profile.phone')} *
               </ThemedText>
               <Controller
                 control={profileControl}
                 name="phone"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Numéro de téléphone"
+                    placeholder={t('agent.profile.phone')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -400,8 +403,8 @@ export default function AgentProfile() {
                     size="md"
                     fullWidth
                     keyboardType="phone-pad"
-                    accessibilityLabel="Champ téléphone"
-                    accessibilityHint="Modifiez votre numéro de téléphone"
+                    accessibilityLabel={t('agent.profile.phone')}
+                    accessibilityHint={t('agent.profile.phone')}
                     style={styles.input}
                   />
                 )}
@@ -414,21 +417,21 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Adresse */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Adresse"
+                accessibilityLabel={t('agent.profile.address')}
               >
-                Adresse *
+                {t('agent.profile.address')} *
               </ThemedText>
               <Controller
                 control={profileControl}
                 name="address"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Adresse complète"
+                    placeholder={t('agent.profile.address')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -437,9 +440,9 @@ export default function AgentProfile() {
                     fullWidth
                     multiline
                     numberOfLines={3}
-                    accessibilityLabel="Champ adresse"
-                    accessibilityHint="Modifiez votre adresse"
-                    style={[styles.input, styles.multilineInput]}
+                    accessibilityLabel={t('agent.profile.address')}
+                    accessibilityHint={t('agent.profile.address')}
+                    style={{ ...styles.input, ...styles.multilineInput }}
                   />
                 )}
               />
@@ -456,11 +459,11 @@ export default function AgentProfile() {
               fullWidth
               onPress={handleProfileSubmit(onProfileSubmit)}
               disabled={isSaving}
-              accessibilityLabel="Bouton sauvegarder profil"
-              accessibilityHint="Sauvegarde les modifications du profil"
+              accessibilityLabel={t('common.save')}
+              accessibilityHint={t('common.save')}
               style={styles.saveButton}
             >
-              {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+              {isSaving ? t('agent.profile.saving') : t('agent.profile.savingText')}
             </ThemedButton>
           </ThemedCard>
         )}
@@ -472,27 +475,27 @@ export default function AgentProfile() {
               size="lg" 
               weight="semibold" 
               style={styles.sectionTitle}
-              accessibilityLabel="Changer le mot de passe"
+              accessibilityLabel={t('agent.profile.changePassword')}
             >
-              Changer le mot de passe
+              {t('agent.profile.changePassword')}
             </ThemedText>
 
             {/* Mot de passe actuel */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Mot de passe actuel"
+                accessibilityLabel={t('agent.profile.currentPassword')}
               >
-                Mot de passe actuel *
+                {t('agent.profile.currentPassword')} *
               </ThemedText>
               <Controller
                 control={passwordControl}
                 name="currentPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Mot de passe actuel"
+                    placeholder={t('agent.profile.currentPassword')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -500,8 +503,8 @@ export default function AgentProfile() {
                     size="md"
                     fullWidth
                     secureTextEntry
-                    accessibilityLabel="Champ mot de passe actuel"
-                    accessibilityHint="Saisissez votre mot de passe actuel"
+                    accessibilityLabel={t('agent.profile.currentPassword')}
+                    accessibilityHint={t('agent.profile.currentPassword')}
                     style={styles.input}
                   />
                 )}
@@ -514,21 +517,21 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Nouveau mot de passe */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Nouveau mot de passe"
+                accessibilityLabel={t('agent.profile.newPassword')}
               >
-                Nouveau mot de passe *
+                {t('agent.profile.newPassword')} *
               </ThemedText>
               <Controller
                 control={passwordControl}
                 name="newPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Nouveau mot de passe"
+                    placeholder={t('agent.profile.newPassword')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -536,8 +539,8 @@ export default function AgentProfile() {
                     size="md"
                     fullWidth
                     secureTextEntry
-                    accessibilityLabel="Champ nouveau mot de passe"
-                    accessibilityHint="Saisissez votre nouveau mot de passe"
+                    accessibilityLabel={t('agent.profile.newPassword')}
+                    accessibilityHint={t('agent.profile.newPassword')}
                     style={styles.input}
                   />
                 )}
@@ -550,21 +553,21 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Confirmation */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Confirmer le mot de passe"
+                accessibilityLabel={t('agent.profile.confirmPassword')}
               >
-                Confirmer le mot de passe *
+                {t('agent.profile.confirmPassword')} *
               </ThemedText>
               <Controller
                 control={passwordControl}
                 name="confirmPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <ThemedInput
-                    placeholder="Confirmer le mot de passe"
+                    placeholder={t('agent.profile.confirmPassword')}
                     value={value}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -572,8 +575,8 @@ export default function AgentProfile() {
                     size="md"
                     fullWidth
                     secureTextEntry
-                    accessibilityLabel="Champ confirmation mot de passe"
-                    accessibilityHint="Confirmez votre nouveau mot de passe"
+                    accessibilityLabel={t('agent.profile.confirmPassword')}
+                    accessibilityHint={t('agent.profile.confirmPassword')}
                     style={styles.input}
                   />
                 )}
@@ -591,11 +594,11 @@ export default function AgentProfile() {
               fullWidth
               onPress={handlePasswordSubmit(onPasswordSubmit)}
               disabled={isSaving}
-              accessibilityLabel="Bouton changer mot de passe"
-              accessibilityHint="Change le mot de passe"
+              accessibilityLabel={t('agent.profile.changePassword')}
+              accessibilityHint={t('agent.profile.changePassword')}
               style={styles.saveButton}
             >
-              {isSaving ? 'Modification...' : 'Changer le mot de passe'}
+              {isSaving ? t('agent.profile.changing') : t('agent.profile.changingPassword')}
             </ThemedButton>
           </ThemedCard>
         )}
@@ -607,33 +610,39 @@ export default function AgentProfile() {
               size="lg" 
               weight="semibold" 
               style={styles.sectionTitle}
-              accessibilityLabel="Paramètres de l'application"
+              accessibilityLabel={t('agent.profile.appSettings')}
             >
-              Paramètres de l'application
+              {t('agent.profile.appSettings')}
             </ThemedText>
 
             {/* Langue */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Langue de l'application"
+                accessibilityLabel={t('agent.profile.language')}
               >
-                Langue
+                {t('agent.profile.language')}
               </ThemedText>
-              <ThemedView style={styles.optionsContainer}>
-                {languages.map((language) => (
+              <ThemedView variant="transparent" style={styles.optionsContainer}>
+                {languages.map((lang) => (
                   <ThemedButton
-                    key={language.key}
-                    variant="outline"
+                    key={lang.key}
+                    variant={language === lang.code ? 'primary' : 'outline'}
                     size="sm"
+                    onPress={() => setLanguage(lang.code)}
                     style={styles.optionButton}
-                    accessibilityLabel={`Langue ${language.label}`}
-                    accessibilityHint={`Change la langue vers ${language.label}`}
+                    accessibilityLabel={`${t('agent.profile.language')} ${lang.label}`}
+                    accessibilityHint={`Change lang a ${lang.label}`}
                   >
-                    <ThemedText size="sm">
-                      {language.label}
+                    <ThemedText 
+                      size="sm"
+                      style={{ 
+                        color: language === lang.code ? '#fff' : theme.colors.primary 
+                      }}
+                    >
+                      {lang.label}
                     </ThemedText>
                   </ThemedButton>
                 ))}
@@ -641,16 +650,16 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Thème */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Thème de l'application"
+                accessibilityLabel={t('agent.profile.theme')}
               >
-                Thème
+                {t('agent.profile.theme')}
               </ThemedText>
-              <ThemedView style={styles.optionsContainer}>
+              <ThemedView variant="transparent" style={styles.optionsContainer}>
                 {themes.map((themeOption) => (
                   <ThemedButton
                     key={themeOption.key}
@@ -681,18 +690,18 @@ export default function AgentProfile() {
             </ThemedView>
 
             {/* Notifications */}
-            <ThemedView style={styles.inputContainer}>
+            <ThemedView variant="transparent" style={styles.inputContainer}>
               <ThemedText 
                 size="sm" 
                 weight="medium" 
                 style={styles.label}
-                accessibilityLabel="Notifications"
+                accessibilityLabel={t('agent.profile.notifications')}
               >
-                Notifications
+                {t('agent.profile.notifications')}
               </ThemedText>
-              <ThemedView style={styles.switchContainer}>
+              <ThemedView variant="transparent" style={styles.switchContainer}>
                 <ThemedText variant="secondary" size="sm">
-                  Recevoir les notifications push
+                  {t('agent.profile.receiveNotifications')}
                 </ThemedText>
                 <ThemedButton
                   variant="outline"
@@ -715,11 +724,11 @@ export default function AgentProfile() {
             size="lg"
             fullWidth
             onPress={() => router.back()}
-            accessibilityLabel="Bouton retour"
-            accessibilityHint="Retourne à l'écran précédent"
+            accessibilityLabel={t('common.back')}
+            accessibilityHint={t('common.back')}
             style={styles.button}
           >
-            Retour
+            {t('common.back')}
           </ThemedButton>
           
           <ThemedButton
@@ -727,13 +736,13 @@ export default function AgentProfile() {
             size="lg"
             fullWidth
             onPress={handleLogout}
-            style={[styles.button, { borderColor: theme.colors.error }]}
-            accessibilityLabel="Bouton déconnexion"
-            accessibilityHint="Se déconnecter de l'application"
+            style={{ ...styles.button, borderColor: theme.colors.error }}
+            accessibilityLabel={t('agent.profile.logout')}
+            accessibilityHint={t('agent.profile.logout')}
           >
             <FontAwesome name="sign-out" size={16} color={theme.colors.error} />
             <ThemedText size="base" style={{ color: theme.colors.error, marginLeft: 8 }}>
-              Déconnexion
+              {t('agent.profile.logout')}
             </ThemedText>
           </ThemedButton>
         </ThemedView>

@@ -5,6 +5,7 @@ import {
     ThemedView
 } from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,6 +16,7 @@ export default function HelpScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
+  const t = useTranslation();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   const toggleSection = (sectionId: string) => {
@@ -29,16 +31,16 @@ export default function HelpScreen() {
 
   const contactSupport = () => {
     Alert.alert(
-      'Contacter le support',
-      'Comment souhaitez-vous contacter le support ?',
+      t('agent.help.contactSupport'),
+      t('agent.help.contactSupportDesc'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: 'Email', 
+          text: t('agent.help.email'), 
           onPress: () => Linking.openURL('mailto:support@graceregistry.ht')
         },
         { 
-          text: 'Téléphone', 
+          text: t('agent.help.phone'), 
           onPress: () => Linking.openURL('tel:+50912345678')
         },
       ]
@@ -48,194 +50,194 @@ export default function HelpScreen() {
   const helpSections = [
     {
       id: 'getting-started',
-      title: 'Premiers pas',
+      title: t('agent.help.gettingStarted'),
       icon: 'play-circle' as const,
       color: theme.colors.primary,
       content: [
         {
-          subtitle: 'Connexion à l\'application',
+          subtitle: t('agent.help.login'),
           steps: [
-            'Sélectionnez votre rôle (Agent)',
-            'Saisissez vos identifiants',
-            'Choisissez votre langue préférée',
-            'Sélectionnez le thème (clair/sombre/auto)'
+            t('agent.help.login') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.login') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.login') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.login') + ' - ' + t('agent.help.gettingStarted')
           ]
         },
         {
-          subtitle: 'Navigation dans l\'application',
+          subtitle: t('agent.help.navigation'),
           steps: [
-            'Utilisez les onglets en bas pour naviguer',
-            'Le tableau de bord affiche vos actions rapides',
-            'Consultez l\'historique pour voir vos enregistrements',
-            'Accédez au profil pour modifier vos paramètres'
+            t('agent.help.navigation') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.navigation') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.navigation') + ' - ' + t('agent.help.gettingStarted'),
+            t('agent.help.navigation') + ' - ' + t('agent.help.gettingStarted')
           ]
         }
       ]
     },
     {
       id: 'pregnancy-registration',
-      title: 'Enregistrement de grossesse',
+      title: t('agent.help.pregnancyRegistration'),
       icon: 'heart' as const,
       color: theme.colors.success,
       content: [
         {
-          subtitle: 'Informations requises',
+          subtitle: t('agent.help.requiredInfo'),
           steps: [
-            'Prénom et nom de la mère',
-            'Date de naissance de la mère',
-            'Numéro de contact (téléphone)',
-            'Adresse complète',
-            'Date prévue d\'accouchement',
-            'Notes additionnelles (optionnel)'
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.requiredInfo') + ' - ' + t('agent.help.pregnancyRegistration')
           ]
         },
         {
-          subtitle: 'Génération de preuve',
+          subtitle: t('agent.help.proof'),
           steps: [
-            'Remplissez tous les champs obligatoires',
-            'Cliquez sur "Générer Preuve"',
-            'Un QR code et PDF provisoire sont créés',
-            'Remettez la preuve aux parents',
-            'Le dossier sera validé par l\'administration'
+            t('agent.help.proof') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.proof') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.proof') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.proof') + ' - ' + t('agent.help.pregnancyRegistration'),
+            t('agent.help.proof') + ' - ' + t('agent.help.pregnancyRegistration')
           ]
         }
       ]
     },
     {
       id: 'birth-registration',
-      title: 'Enregistrement de naissance',
-      icon: 'baby' as const,
+      title: t('agent.help.birthRegistration'),
+      icon: 'child' as const,
       color: theme.colors.primary,
       content: [
         {
-          subtitle: 'Informations du bébé',
+          subtitle: t('agent.help.babyInfo'),
           steps: [
-            'Prénom et nom de famille',
-            'Sexe (masculin/féminin)',
-            'Date et heure de naissance',
-            'Lieu de naissance précis'
+            t('agent.help.babyInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.babyInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.babyInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.babyInfo') + ' - ' + t('agent.help.birthRegistration')
           ]
         },
         {
-          subtitle: 'Informations des parents',
+          subtitle: t('agent.help.parentsInfo'),
           steps: [
-            'Prénom et nom de la mère (obligatoire)',
-            'Prénom et nom du père (optionnel)',
-            'Vérifiez l\'exactitude des informations'
+            t('agent.help.parentsInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.parentsInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.parentsInfo') + ' - ' + t('agent.help.birthRegistration')
           ]
         },
         {
-          subtitle: 'Informations médicales',
+          subtitle: t('agent.help.medicalInfo'),
           steps: [
-            'Nom du médecin ou agent présent',
-            'Nom et contact du témoin',
-            'Notes médicales si nécessaire'
+            t('agent.help.medicalInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.medicalInfo') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.medicalInfo') + ' - ' + t('agent.help.birthRegistration')
           ]
         },
         {
-          subtitle: 'Liaison avec grossesse',
+          subtitle: t('agent.help.linkPregnancy'),
           steps: [
-            'Utilisez le bouton "Lier" si disponible',
-            'Recherchez par ID ou QR code',
-            'Cela accélère le processus de validation'
+            t('agent.help.linkPregnancy') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.linkPregnancy') + ' - ' + t('agent.help.birthRegistration'),
+            t('agent.help.linkPregnancy') + ' - ' + t('agent.help.birthRegistration')
           ]
         }
       ]
     },
     {
       id: 'emergency-procedures',
-      title: 'Procédures d\'urgence',
+      title: t('agent.help.emergencyProcedures'),
       icon: 'exclamation-triangle' as const,
       color: theme.colors.error,
       content: [
         {
-          subtitle: 'En cas d\'urgence médicale',
+          subtitle: t('agent.help.medicalEmergency'),
           steps: [
-            'Appelez immédiatement les secours (114, 115, 116)',
-            'Utilisez l\'écran Urgence de l\'application',
-            'Décrivez la situation en détail',
-            'Indiquez le lieu précis',
-            'Restez avec la personne jusqu\'aux secours'
+            t('agent.help.medicalEmergency') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.medicalEmergency') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.medicalEmergency') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.medicalEmergency') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.medicalEmergency') + ' - ' + t('agent.help.emergencyProcedures')
           ]
         },
         {
-          subtitle: 'Signalement via l\'application',
+          subtitle: t('agent.help.reporting'),
           steps: [
-            'Accédez à l\'écran Urgence',
-            'Sélectionnez le type d\'urgence',
-            'Choisissez le niveau de priorité',
-            'Décrivez la situation',
-            'Envoyez le signalement'
+            t('agent.help.reporting') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.reporting') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.reporting') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.reporting') + ' - ' + t('agent.help.emergencyProcedures'),
+            t('agent.help.reporting') + ' - ' + t('agent.help.emergencyProcedures')
           ]
         }
       ]
     },
     {
       id: 'history-management',
-      title: 'Gestion de l\'historique',
+      title: t('agent.help.historyManagement'),
       icon: 'history' as const,
       color: theme.colors.secondary,
       content: [
         {
-          subtitle: 'Consultation des enregistrements',
+          subtitle: t('agent.help.consultation'),
           steps: [
-            'Accédez à l\'onglet Historique',
-            'Utilisez les filtres par type et statut',
-            'Recherchez par nom ou description',
-            'Consultez les détails de chaque dossier'
+            t('agent.help.consultation') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.consultation') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.consultation') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.consultation') + ' - ' + t('agent.help.historyManagement')
           ]
         },
         {
-          subtitle: 'Statuts des dossiers',
+          subtitle: t('agent.help.status'),
           steps: [
-            'Brouillon : En cours de saisie',
-            'Soumis : En attente de validation',
-            'Validé : Approuvé par l\'administration',
-            'Rejeté : Nécessite des corrections'
+            t('agent.help.status') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.status') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.status') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.status') + ' - ' + t('agent.help.historyManagement')
           ]
         },
         {
-          subtitle: 'Actions disponibles',
+          subtitle: t('agent.help.actions'),
           steps: [
-            'Modifier les brouillons',
-            'Générer des preuves pour les dossiers validés',
-            'Consulter les preuves existantes',
-            'Suivre l\'état de validation'
+            t('agent.help.actions') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.actions') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.actions') + ' - ' + t('agent.help.historyManagement'),
+            t('agent.help.actions') + ' - ' + t('agent.help.historyManagement')
           ]
         }
       ]
     },
     {
       id: 'troubleshooting',
-      title: 'Résolution de problèmes',
+      title: t('agent.help.troubleshooting'),
       icon: 'wrench' as const,
       color: theme.colors.warning,
       content: [
         {
-          subtitle: 'Problèmes de connexion',
+          subtitle: t('agent.help.connectionProblems'),
           steps: [
-            'Vérifiez votre connexion Internet',
-            'Redémarrez l\'application',
-            'Vérifiez vos identifiants',
-            'Contactez le support si le problème persiste'
+            t('agent.help.connectionProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.connectionProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.connectionProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.connectionProblems') + ' - ' + t('agent.help.troubleshooting')
           ]
         },
         {
-          subtitle: 'Erreurs de saisie',
+          subtitle: t('agent.help.inputErrors'),
           steps: [
-            'Vérifiez que tous les champs obligatoires sont remplis',
-            'Assurez-vous du format des dates (JJ/MM/AAAA)',
-            'Vérifiez le format des numéros de téléphone',
-            'Les champs en rouge indiquent des erreurs'
+            t('agent.help.inputErrors') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.inputErrors') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.inputErrors') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.inputErrors') + ' - ' + t('agent.help.troubleshooting')
           ]
         },
         {
-          subtitle: 'Problèmes de génération de preuve',
+          subtitle: t('agent.help.proofProblems'),
           steps: [
-            'Vérifiez que tous les champs sont corrects',
-            'Assurez-vous d\'avoir une connexion Internet',
-            'Réessayez après quelques minutes',
-            'Contactez le support si nécessaire'
+            t('agent.help.proofProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.proofProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.proofProblems') + ' - ' + t('agent.help.troubleshooting'),
+            t('agent.help.proofProblems') + ' - ' + t('agent.help.troubleshooting')
           ]
         }
       ]
@@ -244,32 +246,32 @@ export default function HelpScreen() {
 
   const quickActions = [
     {
-      title: 'Guide rapide',
-      description: 'Tutoriel interactif',
+      title: t('agent.help.quickGuide'),
+      description: t('agent.help.quickGuideDesc'),
       icon: 'book' as const,
       color: theme.colors.info,
-      action: () => Alert.alert('Guide rapide', 'Fonctionnalité à venir'),
+      action: () => Alert.alert(t('agent.help.quickGuide'), t('common.comingSoon')),
     },
     {
-      title: 'FAQ',
-      description: 'Questions fréquentes',
+      title: t('agent.help.faq'),
+      description: t('agent.help.faqDesc'),
       icon: 'question-circle' as const,
       color: theme.colors.warning,
-      action: () => Alert.alert('FAQ', 'Fonctionnalité à venir'),
+      action: () => Alert.alert(t('agent.help.faq'), t('common.comingSoon')),
     },
     {
-      title: 'Contacter le support',
-      description: 'Aide personnalisée',
+      title: t('agent.help.contactSupport'),
+      description: t('agent.help.contactSupportDesc'),
       icon: 'phone' as const,
       color: theme.colors.success,
       action: contactSupport,
     },
     {
-      title: 'Signaler un bug',
-      description: 'Rapporter un problème',
+      title: t('agent.help.reportBug'),
+      description: t('agent.help.reportBugDesc'),
       icon: 'bug' as const,
       color: theme.colors.error,
-      action: () => Alert.alert('Signaler un bug', 'Fonctionnalité à venir'),
+      action: () => Alert.alert(t('agent.help.reportBug'), t('common.comingSoon')),
     },
   ];
 
@@ -284,27 +286,27 @@ export default function HelpScreen() {
       >
         {/* Header */}
         <ThemedCard style={styles.headerCard}>
-          <ThemedView style={styles.headerContent}>
+          <ThemedView variant="transparent" style={styles.headerContent}>
             <FontAwesome 
               name="question-circle" 
               size={isTablet ? 40 : 32} 
               color={theme.colors.warning} 
             />
-            <ThemedView style={styles.headerText}>
+            <ThemedView variant="transparent" style={styles.headerText}>
               <ThemedText 
                 size="xl" 
                 weight="bold" 
                 style={styles.title}
-                accessibilityLabel="Centre d'aide"
+                accessibilityLabel={t('agent.help.title')}
               >
-                Centre d'aide
+                {t('agent.help.title')}
               </ThemedText>
               <ThemedText 
                 variant="secondary" 
                 size="sm"
-                accessibilityLabel="Guide d'utilisation de l'application"
+                accessibilityLabel={t('agent.help.subtitle')}
               >
-                Guide d'utilisation et support
+                {t('agent.help.subtitle')}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -316,28 +318,28 @@ export default function HelpScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Actions rapides"
+            accessibilityLabel={t('agent.help.quickActions')}
           >
-            Actions rapides
+            {t('agent.help.quickActions')}
           </ThemedText>
           
-          <ThemedView style={styles.quickActionsGrid}>
+          <ThemedView variant="transparent" style={styles.quickActionsGrid}>
             {quickActions.map((action, index) => (
               <ThemedButton
                 key={index}
                 variant="outline"
-                style={[styles.quickActionButton, { borderColor: action.color }]}
+                style={{ ...styles.quickActionButton, borderColor: action.color }}
                 onPress={action.action}
                 accessibilityLabel={action.title}
                 accessibilityHint={action.description}
               >
-                <ThemedView style={styles.quickActionContent}>
+                <ThemedView variant="transparent" style={styles.quickActionContent}>
                   <FontAwesome 
                     name={action.icon} 
                     size={20} 
                     color={action.color} 
                   />
-                  <ThemedView style={styles.quickActionText}>
+                  <ThemedView variant="transparent" style={styles.quickActionText}>
                     <ThemedText 
                       size="sm" 
                       weight="semibold"
@@ -365,13 +367,13 @@ export default function HelpScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Guide d'utilisation"
+            accessibilityLabel={t('agent.help.usageGuide')}
           >
-            Guide d'utilisation
+            {t('agent.help.usageGuide')}
           </ThemedText>
           
           {helpSections.map((section) => (
-            <ThemedView key={section.id} style={styles.sectionContainer}>
+            <ThemedView key={section.id} variant="transparent" style={styles.sectionContainer}>
               <ThemedButton
                 variant="ghost"
                 style={styles.sectionHeader}
@@ -379,7 +381,7 @@ export default function HelpScreen() {
                 accessibilityLabel={`Section ${section.title}`}
                 accessibilityHint={expandedSections.has(section.id) ? 'Fermer la section' : 'Ouvrir la section'}
               >
-                <ThemedView style={styles.sectionHeaderContent}>
+                <ThemedView variant="transparent" style={styles.sectionHeaderContent}>
                   <FontAwesome 
                     name={section.icon} 
                     size={20} 
@@ -403,9 +405,9 @@ export default function HelpScreen() {
               </ThemedButton>
               
               {expandedSections.has(section.id) && (
-                <ThemedView style={styles.sectionContent}>
+                <ThemedView variant="transparent" style={styles.sectionContent}>
                   {section.content.map((content, contentIndex) => (
-                    <ThemedView key={contentIndex} style={styles.contentBlock}>
+                    <ThemedView key={contentIndex} variant="transparent" style={styles.contentBlock}>
                       <ThemedText 
                         size="sm" 
                         weight="semibold" 
@@ -415,7 +417,7 @@ export default function HelpScreen() {
                         {content.subtitle}
                       </ThemedText>
                       {content.steps.map((step, stepIndex) => (
-                        <ThemedView key={stepIndex} style={styles.stepItem}>
+                        <ThemedView key={stepIndex} variant="transparent" style={styles.stepItem}>
                           <FontAwesome 
                             name="check-circle" 
                             size={12} 
@@ -446,22 +448,22 @@ export default function HelpScreen() {
             size="lg" 
             weight="semibold" 
             style={styles.sectionTitle}
-            accessibilityLabel="Informations de contact"
+            accessibilityLabel={t('agent.help.needMoreHelp')}
           >
-            Besoin d'aide supplémentaire ?
+            {t('agent.help.needMoreHelp')}
           </ThemedText>
           
-          <ThemedView style={styles.contactInfo}>
-            <ThemedView style={styles.contactItem}>
+          <ThemedView variant="transparent" style={styles.contactInfo}>
+            <ThemedView variant="transparent" style={styles.contactItem}>
               <FontAwesome 
                 name="envelope" 
                 size={16} 
                 color={theme.colors.info} 
                 style={styles.contactIcon}
               />
-              <ThemedView style={styles.contactText}>
+              <ThemedView variant="transparent" style={styles.contactText}>
                 <ThemedText variant="secondary" size="sm">
-                  Email
+                  {t('agent.help.contactEmail')}
                 </ThemedText>
                 <ThemedText size="sm" weight="medium">
                   support@graceregistry.ht
@@ -469,16 +471,16 @@ export default function HelpScreen() {
               </ThemedView>
             </ThemedView>
             
-            <ThemedView style={styles.contactItem}>
+            <ThemedView variant="transparent" style={styles.contactItem}>
               <FontAwesome 
                 name="phone" 
                 size={16} 
                 color={theme.colors.success} 
                 style={styles.contactIcon}
               />
-              <ThemedView style={styles.contactText}>
+              <ThemedView variant="transparent" style={styles.contactText}>
                 <ThemedText variant="secondary" size="sm">
-                  Téléphone
+                  {t('agent.help.contactPhone')}
                 </ThemedText>
                 <ThemedText size="sm" weight="medium">
                   +509 1234 5678
@@ -486,19 +488,19 @@ export default function HelpScreen() {
               </ThemedView>
             </ThemedView>
             
-            <ThemedView style={styles.contactItem}>
+            <ThemedView variant="transparent" style={styles.contactItem}>
               <FontAwesome 
                 name="clock-o" 
                 size={16} 
                 color={theme.colors.warning} 
                 style={styles.contactIcon}
               />
-              <ThemedView style={styles.contactText}>
+              <ThemedView variant="transparent" style={styles.contactText}>
                 <ThemedText variant="secondary" size="sm">
-                  Heures d'ouverture
+                  {t('agent.help.openingHours')}
                 </ThemedText>
                 <ThemedText size="sm" weight="medium">
-                  Lun-Ven: 8h-17h
+                  {t('agent.help.openingHoursValue')}
                 </ThemedText>
               </ThemedView>
             </ThemedView>
@@ -509,13 +511,13 @@ export default function HelpScreen() {
             size="md"
             fullWidth
             onPress={contactSupport}
-            accessibilityLabel="Contacter le support"
-            accessibilityHint="Ouvre les options de contact"
+            accessibilityLabel={t('agent.help.contactSupportButton')}
+            accessibilityHint={t('agent.help.contactSupportButton')}
             style={styles.contactButton}
           >
             <FontAwesome name="phone" size={16} color="#fff" />
             <ThemedText size="base" weight="semibold" style={{ color: '#fff', marginLeft: 8 }}>
-              Contacter le support
+              {t('agent.help.contactSupportButton')}
             </ThemedText>
           </ThemedButton>
         </ThemedCard>
@@ -527,11 +529,11 @@ export default function HelpScreen() {
             size="lg"
             fullWidth
             onPress={() => router.back()}
-            accessibilityLabel="Bouton retour"
-            accessibilityHint="Retourne à l'écran précédent"
+            accessibilityLabel={t('common.back')}
+            accessibilityHint={t('common.back')}
             style={styles.button}
           >
-            Retour
+            {t('common.back')}
           </ThemedButton>
         </ThemedView>
       </ScrollView>
