@@ -85,11 +85,100 @@ export default function LoginScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
+      {/* Theme Selector Panel - Vertical Floating Icons */}
+      <View style={styles.themePanel}>
+        <TouchableOpacity
+          style={[
+            styles.themePanelButton,
+            appTheme === 'light' && styles.themePanelButtonActive,
+            { 
+              shadowColor: appTheme === 'light' 
+                ? (currentTheme === 'dark' ? tintColor : '#000')
+                : (currentTheme === 'dark' ? '#fff' : '#000'),
+              shadowOffset: { width: 0, height: appTheme === 'light' ? 4 : 2 },
+              shadowOpacity: appTheme === 'light' ? 0.4 : 0.15,
+              shadowRadius: appTheme === 'light' ? 6 : 4,
+              elevation: appTheme === 'light' ? 5 : 3,
+              backgroundColor: appTheme === 'light' 
+                ? (currentTheme === 'dark' ? tintColor + '40' : tintColor + '25')
+                : (currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'transparent'),
+              borderWidth: appTheme === 'light' ? 2 : 0,
+              borderColor: appTheme === 'light' ? tintColor : 'transparent',
+            }
+          ]}
+          onPress={() => setAppTheme('light')}
+        >
+          <FontAwesome 
+            name="sun-o" 
+            size={appTheme === 'light' ? 24 : 22} 
+            color={appTheme === 'light' ? tintColor : (currentTheme === 'dark' ? '#fff' : iconColor)} 
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.themePanelButton,
+            appTheme === 'system' && styles.themePanelButtonActive,
+            { 
+              shadowColor: appTheme === 'system' 
+                ? (currentTheme === 'dark' ? tintColor : '#000')
+                : (currentTheme === 'dark' ? '#fff' : '#000'),
+              shadowOffset: { width: 0, height: appTheme === 'system' ? 4 : 2 },
+              shadowOpacity: appTheme === 'system' ? 0.4 : 0.15,
+              shadowRadius: appTheme === 'system' ? 6 : 4,
+              elevation: appTheme === 'system' ? 5 : 3,
+              backgroundColor: appTheme === 'system' 
+                ? (currentTheme === 'dark' ? tintColor + '40' : tintColor + '25')
+                : (currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'transparent'),
+              borderWidth: appTheme === 'system' ? 2 : 0,
+              borderColor: appTheme === 'system' ? tintColor : 'transparent',
+            }
+          ]}
+          onPress={() => setAppTheme('system')}
+        >
+          <FontAwesome 
+            name="circle-o" 
+            size={appTheme === 'system' ? 24 : 22} 
+            color={appTheme === 'system' ? tintColor : (currentTheme === 'dark' ? '#fff' : iconColor)} 
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.themePanelButton,
+            appTheme === 'dark' && styles.themePanelButtonActive,
+            { 
+              shadowColor: appTheme === 'dark' 
+                ? (currentTheme === 'dark' ? tintColor : '#000')
+                : (currentTheme === 'dark' ? '#fff' : '#000'),
+              shadowOffset: { width: 0, height: appTheme === 'dark' ? 4 : 2 },
+              shadowOpacity: appTheme === 'dark' ? 0.4 : 0.15,
+              shadowRadius: appTheme === 'dark' ? 6 : 4,
+              elevation: appTheme === 'dark' ? 5 : 3,
+              backgroundColor: appTheme === 'dark' 
+                ? (currentTheme === 'dark' ? tintColor + '40' : tintColor + '25')
+                : (currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'transparent'),
+              borderWidth: appTheme === 'dark' ? 2 : 0,
+              borderColor: appTheme === 'dark' ? tintColor : 'transparent',
+            }
+          ]}
+          onPress={() => setAppTheme('dark')}
+        >
+          <FontAwesome 
+            name="moon-o" 
+            size={appTheme === 'dark' ? 24 : 22} 
+            color={appTheme === 'dark' ? tintColor : (currentTheme === 'dark' ? '#fff' : iconColor)} 
+          />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
           <View style={[styles.iconContainer, { backgroundColor: tintColor }]}>
-            <FontAwesome name="user" size={40} color="#fff" />
+            <FontAwesome 
+              name="user" 
+              size={40} 
+              color={currentTheme === 'dark' ? '#fff' : '#2f95dc'} 
+            />
           </View>
           <Text style={[styles.appName, { color: textColor }]}>GraceRegistry</Text>
           <Text style={[styles.subtitle, { color: iconColor }]}>
@@ -278,57 +367,6 @@ export default function LoginScreen() {
           </View>
         </View>
 
-        {/* Theme Selector */}
-        <View style={styles.themeContainer}>
-          <FontAwesome name="adjust" size={20} color={iconColor} />
-          <View style={[styles.themeButtons, { borderColor }]}>
-            <TouchableOpacity
-              style={[
-                styles.themeButton, 
-                { backgroundColor: appTheme === 'light' ? languageButtonActiveBg : languageButtonInactiveBg }
-              ]}
-              onPress={() => setAppTheme('light')}
-            >
-              <FontAwesome name="sun-o" size={16} color={appTheme === 'light' ? '#fff' : iconColor} />
-              <Text style={[
-                styles.themeButtonText, 
-                { color: appTheme === 'light' ? '#fff' : textColor }
-              ]}>
-                Clair
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.themeButton, 
-                { backgroundColor: appTheme === 'system' ? languageButtonActiveBg : languageButtonInactiveBg }
-              ]}
-              onPress={() => setAppTheme('system')}
-            >
-              <FontAwesome name="circle-o" size={16} color={appTheme === 'system' ? '#fff' : iconColor} />
-              <Text style={[
-                styles.themeButtonText, 
-                { color: appTheme === 'system' ? '#fff' : textColor }
-              ]}>
-                Auto
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.themeButton, 
-                { backgroundColor: appTheme === 'dark' ? languageButtonActiveBg : languageButtonInactiveBg }
-              ]}
-              onPress={() => setAppTheme('dark')}
-            >
-              <FontAwesome name="moon-o" size={16} color={appTheme === 'dark' ? '#fff' : iconColor} />
-              <Text style={[
-                styles.themeButtonText, 
-                { color: appTheme === 'dark' ? '#fff' : textColor }
-              ]}>
-                Sombre
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </ScrollView>
     </View>
   );
@@ -493,29 +531,25 @@ const styles = StyleSheet.create({
   languageButtonTextActive: {
     color: '#fff',
   },
-  themeContainer: {
-    flexDirection: 'row',
+  themePanel: {
+    position: 'absolute',
+    right: 16,
+    top: 60,
+    gap: 12,
+    zIndex: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
-    paddingTop: 20,
   },
-  themeButtons: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  themeButton: {
-    flexDirection: 'row',
+  themePanelButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    gap: 6,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
-  themeButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
+  themePanelButtonActive: {
+    transform: [{ scale: 1.1 }],
   },
   errorText: {
     color: '#dc3545',

@@ -1,9 +1,9 @@
+import { PressableButton } from '@/components/PressableButton';
 import {
   ThemedCard,
   ThemedText,
   ThemedView
 } from '@/components/ThemedComponents';
-import { PressableButton } from '@/components/PressableButton';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageStore } from '@/store/languageStore';
@@ -12,7 +12,7 @@ import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Pressable, ScrollView, Switch, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -56,7 +56,10 @@ export default function SettingsScreen() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <ThemedView style={styles.header}>
+      <ThemedView 
+        variant="transparent"
+        style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}
+      >
         <Pressable
           onPress={() => router.back()}
           style={styles.backButton}
@@ -66,11 +69,15 @@ export default function SettingsScreen() {
           <FontAwesome
             name="arrow-left"
             size={20}
-            color={theme.colors.text}
+            color="#fff"
           />
         </Pressable>
         <ThemedView variant="transparent" style={styles.headerText}>
-          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+          <ThemedText 
+            size="xl" 
+            weight="bold" 
+            style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}
+          >
             {t('agent.settings.title')}
           </ThemedText>
         </ThemedView>

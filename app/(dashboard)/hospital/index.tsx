@@ -1,9 +1,9 @@
-import {
-  ThemedCard,
-  ThemedText,
-  ThemedView
-} from '@/components/ThemedComponents';
 import { PressableButton } from '@/components/PressableButton';
+import {
+    ThemedCard,
+    ThemedText,
+    ThemedView
+} from '@/components/ThemedComponents';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
@@ -97,16 +97,17 @@ export default function HospitalDashboard() {
       >
         {/* 1️⃣ Header avec dégradé */}
         <ThemedView 
-          style={[
+          variant="transparent"
+          style={StyleSheet.flatten([
             styles.header,
             { backgroundColor: theme.colors.primary }
-          ]}
+          ])}
         >
           <ThemedView variant="transparent" style={styles.headerContent}>
             <ThemedView variant="transparent" style={styles.headerLeft}>
               <ThemedView 
                 variant="transparent" 
-                style={[styles.institutionIcon, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}
+                style={StyleSheet.flatten([styles.institutionIcon, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }])}
               >
                 <FontAwesome 
                   name="building" 
@@ -194,7 +195,8 @@ export default function HospitalDashboard() {
             onPress={() => handleQuickAction('pregnancy')}
           >
             <ThemedView 
-              style={[styles.actionIconCircle, { backgroundColor: theme.colors.success + '20' }]}
+              variant="transparent"
+              style={StyleSheet.flatten([styles.actionIconCircle, { backgroundColor: theme.colors.success + '20' }])}
             >
               <FontAwesome 
                 name="heart" 
@@ -220,7 +222,8 @@ export default function HospitalDashboard() {
             onPress={() => handleQuickAction('birth')}
           >
             <ThemedView 
-              style={[styles.actionIconCircle, { backgroundColor: theme.colors.primary + '20' }]}
+              variant="transparent"
+              style={StyleSheet.flatten([styles.actionIconCircle, { backgroundColor: theme.colors.primary + '20' }])}
             >
               <FontAwesome 
                 name="child" 
@@ -246,7 +249,8 @@ export default function HospitalDashboard() {
             onPress={() => handleQuickAction('history')}
           >
             <ThemedView 
-              style={[styles.actionIconCircle, { backgroundColor: theme.colors.info + '20' }]}
+              variant="transparent"
+              style={StyleSheet.flatten([styles.actionIconCircle, { backgroundColor: theme.colors.info + '20' }])}
             >
               <FontAwesome 
                 name="history" 
@@ -272,7 +276,8 @@ export default function HospitalDashboard() {
             onPress={() => handleQuickAction('search')}
           >
             <ThemedView 
-              style={[styles.actionIconCircle, { backgroundColor: theme.colors.warning + '20' }]}
+              variant="transparent"
+              style={StyleSheet.flatten([styles.actionIconCircle, { backgroundColor: theme.colors.warning + '20' }])}
             >
               <FontAwesome 
                 name="search" 
@@ -304,11 +309,11 @@ export default function HospitalDashboard() {
           <ThemedView variant="transparent" style={styles.statsRows}>
             <ThemedView 
               variant="transparent" 
-              style={[styles.statsRow, { backgroundColor: theme.colors.primary + '10' }]}
+              style={StyleSheet.flatten([styles.statsRow, { backgroundColor: theme.colors.primary + '10' }])}
             >
               <ThemedView 
                 variant="transparent" 
-                style={[styles.statsRowIcon, { backgroundColor: theme.colors.success + '20' }]}
+                style={StyleSheet.flatten([styles.statsRowIcon, { backgroundColor: theme.colors.success + '20' }])}
               >
                 <FontAwesome 
                   name="heart" 
@@ -326,11 +331,11 @@ export default function HospitalDashboard() {
 
             <ThemedView 
               variant="transparent" 
-              style={[styles.statsRow, { backgroundColor: theme.colors.secondary + '10' }]}
+              style={StyleSheet.flatten([styles.statsRow, { backgroundColor: theme.colors.secondary + '10' }])}
             >
               <ThemedView 
                 variant="transparent" 
-                style={[styles.statsRowIcon, { backgroundColor: theme.colors.primary + '20' }]}
+                style={StyleSheet.flatten([styles.statsRowIcon, { backgroundColor: theme.colors.primary + '20' }])}
               >
                 <FontAwesome 
                   name="child" 
@@ -363,7 +368,7 @@ export default function HospitalDashboard() {
             <ThemedView variant="transparent" style={styles.statsColumn}>
               <ThemedView 
                 variant="transparent" 
-                style={[styles.statsColumnIcon, { backgroundColor: theme.colors.success + '20' }]}
+                style={StyleSheet.flatten([styles.statsColumnIcon, { backgroundColor: theme.colors.success + '20' }])}
               >
                 <FontAwesome 
                   name="calendar" 
@@ -382,7 +387,7 @@ export default function HospitalDashboard() {
             <ThemedView variant="transparent" style={styles.statsColumn}>
               <ThemedView 
                 variant="transparent" 
-                style={[styles.statsColumnIcon, { backgroundColor: theme.colors.primary + '20' }]}
+                style={StyleSheet.flatten([styles.statsColumnIcon, { backgroundColor: theme.colors.primary + '20' }])}
               >
                 <FontAwesome 
                   name="calendar" 
@@ -545,7 +550,7 @@ export default function HospitalDashboard() {
                 ]}
                 onPress={() => handleAddOption('pregnancy')}
               >
-                <ThemedView variant="transparent" style={[styles.modalOptionIcon, { backgroundColor: theme.colors.success + '20' }]}>
+                <ThemedView variant="transparent" style={StyleSheet.flatten([styles.modalOptionIcon, { backgroundColor: theme.colors.success + '20' }])}>
                   <FontAwesome 
                     name="heart" 
                     size={isTablet ? 32 : 28} 
@@ -578,7 +583,7 @@ export default function HospitalDashboard() {
                 ]}
                 onPress={() => handleAddOption('birth')}
               >
-                <ThemedView variant="transparent" style={[styles.modalOptionIcon, { backgroundColor: theme.colors.primary + '20' }]}>
+                <ThemedView variant="transparent" style={StyleSheet.flatten([styles.modalOptionIcon, { backgroundColor: theme.colors.primary + '20' }])}>
                   <FontAwesome 
                     name="child" 
                     size={isTablet ? 32 : 28} 

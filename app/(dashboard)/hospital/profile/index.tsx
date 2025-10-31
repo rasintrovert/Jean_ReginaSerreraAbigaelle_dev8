@@ -1,9 +1,10 @@
+import { PressableButton } from '@/components/PressableButton';
 import {
   ThemedCard,
+  ThemedInput,
   ThemedText,
   ThemedView
 } from '@/components/ThemedComponents';
-import { PressableButton } from '@/components/PressableButton';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
@@ -103,10 +104,11 @@ export default function HospitalProfileScreen() {
       >
         {/* Header avec dégradé */}
         <ThemedView 
-          style={[
+          variant="transparent"
+          style={StyleSheet.flatten([
             styles.header,
             { backgroundColor: theme.colors.primary }
-          ]}
+          ])}
         >
           <Pressable
             onPress={() => router.back()}
@@ -121,7 +123,7 @@ export default function HospitalProfileScreen() {
           <ThemedView variant="transparent" style={styles.headerContent}>
             <ThemedView 
               variant="transparent" 
-              style={[styles.avatarContainer, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}
+              style={StyleSheet.flatten([styles.avatarContainer, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }])}
             >
               <FontAwesome
                 name="building"
@@ -163,7 +165,7 @@ export default function HospitalProfileScreen() {
             </ThemedView>
           </ThemedView>
 
-          <ThemedView variant="transparent" style={[styles.infoRow, styles.infoRowSeparator]}>
+          <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoRow, styles.infoRowSeparator])}>
             <FontAwesome name="shield" size={18} color={theme.colors.primary} />
             <ThemedView variant="transparent" style={styles.infoContent}>
               <ThemedText variant="secondary" size="sm" style={styles.infoLabel}>
@@ -175,7 +177,7 @@ export default function HospitalProfileScreen() {
             </ThemedView>
           </ThemedView>
 
-          <ThemedView variant="transparent" style={[styles.infoRow, styles.infoRowSeparator]}>
+          <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoRow, styles.infoRowSeparator])}>
             <FontAwesome name="user-md" size={18} color={theme.colors.primary} />
             <ThemedView variant="transparent" style={styles.infoContent}>
               <ThemedText variant="secondary" size="sm" style={styles.infoLabel}>
@@ -187,7 +189,7 @@ export default function HospitalProfileScreen() {
             </ThemedView>
           </ThemedView>
 
-          <ThemedView variant="transparent" style={[styles.infoRow, styles.infoRowSeparator]}>
+          <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoRow, styles.infoRowSeparator])}>
             <FontAwesome name="calendar" size={18} color={theme.colors.primary} />
             <ThemedView variant="transparent" style={styles.infoContent}>
               <ThemedText variant="secondary" size="sm" style={styles.infoLabel}>
@@ -218,7 +220,7 @@ export default function HospitalProfileScreen() {
             </ThemedView>
           </ThemedView>
 
-          <ThemedView variant="transparent" style={[styles.infoRow, styles.infoRowSeparator]}>
+          <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoRow, styles.infoRowSeparator])}>
             <FontAwesome name="phone" size={18} color={theme.colors.primary} />
             <ThemedView variant="transparent" style={styles.infoContent}>
               <ThemedText variant="secondary" size="sm" style={styles.infoLabel}>
@@ -230,9 +232,9 @@ export default function HospitalProfileScreen() {
             </ThemedView>
           </ThemedView>
 
-          <ThemedView variant="transparent" style={[styles.infoRow, styles.infoRowSeparator]}>
+          <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoRow, styles.infoRowSeparator])}>
             <FontAwesome name="map-marker" size={18} color={theme.colors.primary} />
-            <ThemedView variant="transparent" style={[styles.infoContent, styles.infoContentMultiline]}>
+            <ThemedView variant="transparent" style={StyleSheet.flatten([styles.infoContent, styles.infoContentMultiline])}>
               <ThemedText variant="secondary" size="sm" style={styles.infoLabel}>
                 {t('hospital.profile.address') || 'Adresse'}
               </ThemedText>
@@ -248,7 +250,7 @@ export default function HospitalProfileScreen() {
           <ThemedCard style={styles.statsCard}>
             <ThemedView 
               variant="transparent" 
-              style={[styles.statsIcon, { backgroundColor: theme.colors.primary + '20' }]}
+              style={StyleSheet.flatten([styles.statsIcon, { backgroundColor: theme.colors.primary + '20' }])}
             >
               <FontAwesome name="bed" size={24} color={theme.colors.primary} />
             </ThemedView>
@@ -263,7 +265,7 @@ export default function HospitalProfileScreen() {
           <ThemedCard style={styles.statsCard}>
             <ThemedView 
               variant="transparent" 
-              style={[styles.statsIcon, { backgroundColor: theme.colors.secondary + '20' }]}
+              style={StyleSheet.flatten([styles.statsIcon, { backgroundColor: theme.colors.secondary + '20' }])}
             >
               <FontAwesome name="users" size={24} color={theme.colors.secondary} />
             </ThemedView>
@@ -296,7 +298,7 @@ export default function HospitalProfileScreen() {
             size="md"
             fullWidth
             onPress={handleLogout}
-            style={[styles.actionButton, { backgroundColor: theme.colors.error }]}
+            style={StyleSheet.flatten([styles.actionButton, { backgroundColor: theme.colors.error }])}
           >
             <FontAwesome name="sign-out" size={16} color="#fff" />
             <ThemedText size="base" weight="semibold" style={{ color: '#fff', marginLeft: 8 }}>

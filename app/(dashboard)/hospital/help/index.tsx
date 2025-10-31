@@ -255,7 +255,10 @@ export default function HospitalHelpScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.header}>
+      <ThemedView 
+        variant="transparent"
+        style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}
+      >
         <Pressable
           onPress={() => router.back()}
           style={styles.backButton}
@@ -263,11 +266,15 @@ export default function HospitalHelpScreen() {
           <FontAwesome
             name="arrow-left"
             size={20}
-            color={theme.colors.text}
+            color="#fff"
           />
         </Pressable>
         <ThemedView variant="transparent" style={styles.headerText}>
-          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+          <ThemedText 
+            size="xl" 
+            weight="bold" 
+            style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}
+          >
             {t('hospital.help.title') || t('agent.help.title')}
           </ThemedText>
         </ThemedView>

@@ -1,10 +1,10 @@
 import { DateInput } from '@/components/DateInput';
 import { PressableButton } from '@/components/PressableButton';
 import {
-    ThemedCard,
-    ThemedInput,
-    ThemedText,
-    ThemedView
+  ThemedCard,
+  ThemedInput,
+  ThemedText,
+  ThemedView
 } from '@/components/ThemedComponents';
 import { TimeInput } from '@/components/TimeInput';
 import { HAITIAN_DEPARTMENTS } from '@/constants/departments';
@@ -286,15 +286,22 @@ export default function BirthRegistration() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <ThemedView style={styles.header}>
+      <ThemedView 
+        variant="transparent"
+        style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}
+      >
         <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <FontAwesome name="arrow-left" size={24} color={theme.colors.text} />
+          <FontAwesome name="arrow-left" size={24} color="#fff" />
         </Pressable>
         <ThemedView variant="transparent" style={styles.headerTextContent}>
-          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+          <ThemedText 
+            size="xl" 
+            weight="bold" 
+            style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}
+          >
             {t('hospital.birth.title')}
           </ThemedText>
-          <ThemedText variant="secondary" size="sm">
+          <ThemedText size="sm" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
             {t('hospital.birth.subtitle')}
           </ThemedText>
         </ThemedView>

@@ -1,19 +1,17 @@
 import {
   ThemedCard,
-  ThemedInput,
   ThemedText,
   ThemedView
 } from '@/components/ThemedComponents';
-import { PressableButton } from '@/components/PressableButton';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Pressable, Text as RNText, TextInput as RNTextInput, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 type TabType = 'all' | 'pregnancy' | 'birth';
 type PeriodFilter = 'thisWeek' | 'thisMonth' | 'lastMonth';
@@ -150,7 +148,7 @@ export default function HospitalHistoryScreen() {
         <ThemedView variant="transparent" style={styles.recordHeader}>
           <ThemedView 
             variant="transparent" 
-            style={[styles.recordIcon, { backgroundColor: theme.colors.success + '20' }]}
+            style={StyleSheet.flatten([styles.recordIcon, { backgroundColor: theme.colors.success + '20' }])}
           >
             <FontAwesome 
               name="user" 
@@ -159,9 +157,16 @@ export default function HospitalHistoryScreen() {
             />
           </ThemedView>
           <ThemedView variant="transparent" style={styles.recordContent}>
-            <ThemedText size="base" weight="bold" style={styles.recordName} numberOfLines={1}>
+            <RNText 
+              numberOfLines={1}
+              style={[styles.recordName, { 
+                fontSize: theme.typography.fontSize.base, 
+                fontWeight: theme.typography.fontWeight.bold,
+                color: theme.colors.text 
+              }]}
+            >
               {record.motherName}
-            </ThemedText>
+            </RNText>
             <ThemedText variant="secondary" size="sm" style={styles.recordId}>
               {record.referenceNumber}
             </ThemedText>
@@ -192,7 +197,7 @@ export default function HospitalHistoryScreen() {
         <ThemedView variant="transparent" style={styles.recordHeader}>
           <ThemedView 
             variant="transparent" 
-            style={[styles.recordIcon, { backgroundColor: theme.colors.primary + '20' }]}
+            style={StyleSheet.flatten([styles.recordIcon, { backgroundColor: theme.colors.primary + '20' }])}
           >
             <FontAwesome 
               name="child" 
@@ -201,9 +206,16 @@ export default function HospitalHistoryScreen() {
             />
           </ThemedView>
           <ThemedView variant="transparent" style={styles.recordContent}>
-            <ThemedText size="base" weight="bold" style={styles.recordName} numberOfLines={1}>
+            <RNText 
+              numberOfLines={1}
+              style={[styles.recordName, { 
+                fontSize: theme.typography.fontSize.base, 
+                fontWeight: theme.typography.fontWeight.bold,
+                color: theme.colors.text 
+              }]}
+            >
               {record.childName}
-            </ThemedText>
+            </RNText>
             {record.motherName && record.fatherName && (
               <ThemedText variant="secondary" size="sm" style={styles.recordParents}>
                 {record.motherName} & {record.fatherName}
@@ -228,11 +240,23 @@ export default function HospitalHistoryScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView 
+      variant="background" 
+      style={styles.container}
+    >
       {/* 1️⃣ PARTIE 1: HEADER (Sticky) */}
-      <ThemedView style={styles.headerSection}>
+      <ThemedView 
+        variant="transparent"
+        style={StyleSheet.flatten([
+          styles.headerSection, 
+          { 
+            backgroundColor: theme.colors.primary,
+            // Forcer le fond bleu et éviter tout fond par défaut
+          }
+        ])}
+      >
         {/* Barre supérieure */}
-        <ThemedView style={styles.topBar}>
+        <ThemedView variant="transparent" style={styles.topBar}>
           <Pressable
             onPress={() => router.back()}
             style={styles.backButton}
@@ -240,127 +264,169 @@ export default function HospitalHistoryScreen() {
             <FontAwesome
               name="arrow-left"
               size={20}
-              color={theme.colors.text}
+              color="#fff"
             />
           </Pressable>
           <ThemedView variant="transparent" style={styles.headerText}>
-            <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+            <ThemedText size="xl" weight="bold" style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}>
               {t('hospital.history.title')}
             </ThemedText>
-            <ThemedText variant="secondary" size="xs" style={styles.headerSubtitle}>
+            <ThemedText size="xs" style={StyleSheet.flatten([styles.headerSubtitle, { color: 'rgba(255, 255, 255, 0.9)' }])}>
               {t('hospital.history.subtitle')}
             </ThemedText>
           </ThemedView>
         </ThemedView>
 
         {/* Carte de résumé */}
-        <ThemedCard style={styles.summaryCard}>
+        <ThemedView 
+          variant="transparent"
+          style={StyleSheet.flatten([styles.summaryCard, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }])}
+        >
           <ThemedView variant="transparent" style={styles.summaryContent}>
-            <ThemedText size="2xl" weight="bold" style={styles.summaryNumber}>
+            <ThemedText size="2xl" weight="bold" style={StyleSheet.flatten([styles.summaryNumber, { color: '#fff' }])}>
               {totalCount}
             </ThemedText>
-            <ThemedText variant="secondary" size="sm" style={styles.summaryLabel}>
+            <ThemedText size="sm" style={StyleSheet.flatten([styles.summaryLabel, { color: 'rgba(255, 255, 255, 0.9)' }])}>
               {t('hospital.history.total')}
             </ThemedText>
           </ThemedView>
-        </ThemedCard>
+        </ThemedView>
 
         {/* Filtres temporels */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.periodFilters}
+          style={[styles.periodFilters, { backgroundColor: 'transparent' }]}
           contentContainerStyle={styles.periodFiltersContent}
         >
-          <PressableButton
-            variant={periodFilter === 'thisWeek' ? 'primary' : 'outline'}
-            size="sm"
+          <Pressable
             onPress={() => setPeriodFilter('thisWeek')}
-            style={styles.periodFilterButton}
+            style={[
+              styles.periodFilterButton,
+              {
+                backgroundColor: periodFilter === 'thisWeek' ? '#fff' : 'rgba(255, 255, 255, 0.2)',
+                borderWidth: periodFilter === 'thisWeek' ? 0 : 1,
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: theme.borderRadius.md,
+                paddingHorizontal: theme.spacing.md,
+                paddingVertical: theme.spacing.sm,
+              }
+            ]}
           >
             <FontAwesome 
               name="clock-o" 
               size={14} 
-              color={periodFilter === 'thisWeek' ? '#fff' : theme.colors.primary} 
+              color={periodFilter === 'thisWeek' ? theme.colors.primary : '#fff'} 
             />
             <ThemedText
               size="sm"
               style={{
-                color: periodFilter === 'thisWeek' ? '#fff' : theme.colors.primary,
+                color: periodFilter === 'thisWeek' ? theme.colors.primary : '#fff',
                 marginLeft: 6,
               }}
             >
               {t('hospital.history.thisWeek')}
             </ThemedText>
-          </PressableButton>
+          </Pressable>
 
-          <PressableButton
-            variant={periodFilter === 'thisMonth' ? 'primary' : 'outline'}
-            size="sm"
+          <Pressable
             onPress={() => setPeriodFilter('thisMonth')}
-            style={styles.periodFilterButton}
+            style={[
+              styles.periodFilterButton,
+              {
+                backgroundColor: periodFilter === 'thisMonth' ? '#fff' : 'rgba(255, 255, 255, 0.2)',
+                borderWidth: periodFilter === 'thisMonth' ? 0 : 1,
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: theme.borderRadius.md,
+                paddingHorizontal: theme.spacing.md,
+                paddingVertical: theme.spacing.sm,
+              }
+            ]}
           >
             <FontAwesome 
               name="calendar" 
               size={14} 
-              color={periodFilter === 'thisMonth' ? '#fff' : theme.colors.primary} 
+              color={periodFilter === 'thisMonth' ? theme.colors.primary : '#fff'} 
             />
             <ThemedText
               size="sm"
               style={{
-                color: periodFilter === 'thisMonth' ? '#fff' : theme.colors.primary,
+                color: periodFilter === 'thisMonth' ? theme.colors.primary : '#fff',
                 marginLeft: 6,
               }}
             >
               {t('hospital.history.thisMonth')}
             </ThemedText>
-          </PressableButton>
+          </Pressable>
 
-          <PressableButton
-            variant={periodFilter === 'lastMonth' ? 'primary' : 'outline'}
-            size="sm"
+          <Pressable
             onPress={() => setPeriodFilter('lastMonth')}
-            style={styles.periodFilterButton}
+            style={[
+              styles.periodFilterButton,
+              {
+                backgroundColor: periodFilter === 'lastMonth' ? '#fff' : 'rgba(255, 255, 255, 0.2)',
+                borderWidth: periodFilter === 'lastMonth' ? 0 : 1,
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: theme.borderRadius.md,
+                paddingHorizontal: theme.spacing.md,
+                paddingVertical: theme.spacing.sm,
+              }
+            ]}
           >
             <FontAwesome 
-              name="trending-up" 
+              name="arrow-up" 
               size={14} 
-              color={periodFilter === 'lastMonth' ? '#fff' : theme.colors.primary} 
+              color={periodFilter === 'lastMonth' ? theme.colors.primary : '#fff'} 
             />
             <ThemedText
               size="sm"
               style={{
-                color: periodFilter === 'lastMonth' ? '#fff' : theme.colors.primary,
+                color: periodFilter === 'lastMonth' ? theme.colors.primary : '#fff',
                 marginLeft: 6,
               }}
             >
               {t('hospital.history.lastMonth')}
             </ThemedText>
-          </PressableButton>
+          </Pressable>
         </ScrollView>
 
         {/* Barre de recherche */}
-        <ThemedCard style={styles.searchCard}>
+        <ThemedView 
+          variant="transparent"
+          style={StyleSheet.flatten([styles.searchCard, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }])}
+        >
           <ThemedView variant="transparent" style={styles.searchContainer}>
             <FontAwesome 
               name="search" 
               size={16} 
-              color={theme.colors.textSecondary} 
+              color="rgba(255, 255, 255, 0.9)" 
               style={styles.searchIcon}
             />
-            <ThemedInput
+            <RNTextInput
               placeholder={t('hospital.history.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
-              size="md"
-              style={styles.searchInput}
+              style={[
+                styles.searchInput,
+                {
+                  color: '#fff',
+                  backgroundColor: 'transparent',
+                  borderWidth: 0,
+                  paddingHorizontal: theme.spacing.md,
+                  paddingVertical: theme.spacing.md,
+                  fontSize: theme.typography.fontSize.base,
+                  minHeight: 48,
+                }
+              ]}
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
             />
           </ThemedView>
-        </ThemedCard>
+        </ThemedView>
       </ThemedView>
 
       {/* 2️⃣ PARTIE 2: CONTENU PRINCIPAL */}
       <ScrollView
+        style={{ backgroundColor: 'transparent' }}
         contentContainerStyle={[
           styles.scrollContent,
           isTablet && styles.scrollContentTablet
@@ -368,7 +434,7 @@ export default function HospitalHistoryScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Onglets de catégories */}
-        <ThemedView style={styles.tabsContainer}>
+        <ThemedView variant="transparent" style={styles.tabsContainer}>
           <TouchableOpacity
             style={[
               styles.tab,
@@ -452,7 +518,7 @@ export default function HospitalHistoryScreen() {
                 <ThemedText 
                   size="lg" 
                   weight="semibold" 
-                  style={[styles.sectionHeader, { marginTop: pregnancyRecords.length > 0 ? 24 : 0 }]}
+                  style={StyleSheet.flatten([styles.sectionHeader, { marginTop: pregnancyRecords.length > 0 ? 24 : 0 }])}
                 >
                   {t('hospital.history.births')}
                 </ThemedText>
@@ -512,8 +578,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomWidth: 0,
+    width: '100%',
+    alignSelf: 'stretch',
+    zIndex: 10,
+    marginTop: 0,
+    marginHorizontal: 0,
+    position: 'relative',
   },
   topBar: {
     flexDirection: 'row',

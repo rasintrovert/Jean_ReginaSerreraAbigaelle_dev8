@@ -89,8 +89,9 @@ export default function AgentDashboard() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView variant="background" style={styles.container}>
       <ScrollView 
+        style={{ backgroundColor: 'transparent' }}
         contentContainerStyle={[
           styles.scrollContent,
           isTablet && styles.scrollContentTablet
@@ -98,20 +99,23 @@ export default function AgentDashboard() {
         showsVerticalScrollIndicator={false}
       >
         {/* 1️⃣ En-tête avec profil et icônes fonctionnelles */}
-        <ThemedView style={styles.header}>
-          <ThemedView style={styles.profileSection}>
-            <ThemedView style={styles.profileIcon}>
+        <ThemedView 
+          variant="transparent"
+          style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}
+        >
+          <ThemedView variant="transparent" style={styles.profileSection}>
+            <ThemedView variant="transparent" style={styles.profileIcon}>
               <FontAwesome 
                 name="user-circle" 
                 size={isTablet ? 50 : 40} 
-                color={theme.colors.primary} 
+                color="#fff" 
               />
             </ThemedView>
-            <ThemedView style={styles.profileText}>
+            <ThemedView variant="transparent" style={styles.profileText}>
               <ThemedText 
                 size="lg" 
                 weight="bold" 
-                style={styles.welcomeText}
+                style={StyleSheet.flatten([styles.welcomeText, { color: '#fff' }])}
                 accessibilityLabel={t('agent.dashboard.welcome')}
               >
                 {t('agent.dashboard.welcome')}
@@ -119,15 +123,14 @@ export default function AgentDashboard() {
               <ThemedText 
                 size="base" 
                 weight="semibold"
-                style={styles.userName}
+                style={StyleSheet.flatten([styles.userName, { color: '#fff' }])}
                 accessibilityLabel="Nom de l'utilisateur"
               >
                 Jean Dupont
               </ThemedText>
               <ThemedText 
-                variant="secondary" 
                 size="sm"
-                style={styles.userRole}
+                style={StyleSheet.flatten([styles.userRole, { color: 'rgba(255, 255, 255, 0.9)' }])}
                 accessibilityLabel="Rôle de l'utilisateur"
               >
                 Agent - Zone Sud
@@ -135,7 +138,7 @@ export default function AgentDashboard() {
             </ThemedView>
           </ThemedView>
           
-          <ThemedView style={styles.headerActions}>
+          <ThemedView variant="transparent" style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerIconButton}
               onPress={handleNotificationPress}
@@ -157,14 +160,14 @@ export default function AgentDashboard() {
               <FontAwesome 
                 name="cog" 
                 size={isTablet ? 24 : 20} 
-                color={theme.colors.textSecondary} 
+                color="#fff" 
               />
             </TouchableOpacity>
           </ThemedView>
         </ThemedView>
 
         {/* 2️⃣ Section de titre principal */}
-        <ThemedView style={styles.titleSection}>
+        <ThemedView style={StyleSheet.flatten([styles.titleSection, { paddingHorizontal: 16 }])}>
           <ThemedText 
             size="xl" 
             weight="bold" 
@@ -191,7 +194,7 @@ export default function AgentDashboard() {
         </ThemedView>
 
         {/* 3️⃣ Bloc des actions principales */}
-        <ThemedView style={styles.mainActionsContainer}>
+        <ThemedView style={StyleSheet.flatten([styles.mainActionsContainer, { paddingHorizontal: 16 }])}>
           <TouchableOpacity
             style={{ ...styles.mainActionCard, backgroundColor: theme.colors.surface }}
             onPress={() => handleQuickAction('pregnancy')}
@@ -239,7 +242,7 @@ export default function AgentDashboard() {
 
         {/* 4️⃣ Bloc secondaire - Prèv Mwen yo */}
         <TouchableOpacity
-          style={{ ...styles.secondaryCard, backgroundColor: theme.colors.surface }}
+          style={StyleSheet.flatten([{ ...styles.secondaryCard, backgroundColor: theme.colors.surface }, { marginHorizontal: 16 }])}
           onPress={handleProofsPress}
           accessibilityLabel={t('agent.dashboard.myProofs')}
           accessibilityHint={t('agent.history.title')}
@@ -281,7 +284,7 @@ export default function AgentDashboard() {
         </TouchableOpacity>
 
         {/* 5️⃣ Bloc informatif / message d'aide */}
-        <ThemedCard style={styles.infoCard}>
+        <ThemedCard style={StyleSheet.flatten([styles.infoCard, { marginHorizontal: 16 }])}>
           <ThemedView style={{ ...styles.infoContent, backgroundColor: 'transparent' }}>
             <FontAwesome 
               name="info-circle" 
@@ -535,13 +538,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
+    padding: 0,
     paddingBottom: 100, // Espace pour la navigation inférieure
   },
   scrollContentTablet: {
-    paddingHorizontal: 32,
-    maxWidth: 800,
-    alignSelf: 'center',
+    paddingHorizontal: 0,
+    maxWidth: '100%',
+    alignSelf: 'stretch',
     paddingBottom: 120,
   },
   
@@ -551,8 +554,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
-    paddingHorizontal: 4,
+    paddingHorizontal: 16,
     marginBottom: 24,
+    width: '100%',
+    alignSelf: 'stretch',
+    marginHorizontal: 0,
+    borderRadius: 0,
+    marginTop: 0,
   },
   profileSection: {
     flexDirection: 'row',
@@ -563,7 +571,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: 'rgba(47, 149, 220, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -588,7 +596,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(108, 117, 125, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

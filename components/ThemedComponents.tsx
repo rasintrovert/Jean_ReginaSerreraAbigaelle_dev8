@@ -1,14 +1,15 @@
 import { useTheme } from '@/theme';
 import React from 'react';
 import {
-    Text as RNText,
-    TextInput as RNTextInput,
-    TouchableOpacity as RNTouchableOpacity,
-    View as RNView,
-    TextInputProps,
-    TextStyle,
-    TouchableOpacityProps,
-    ViewStyle
+  Text as RNText,
+  TextInput as RNTextInput,
+  TouchableOpacity as RNTouchableOpacity,
+  View as RNView,
+  StyleSheet,
+  TextInputProps,
+  TextStyle,
+  TouchableOpacityProps,
+  ViewStyle
 } from 'react-native';
 
 // Types pour les props des composants
@@ -226,9 +227,9 @@ export function ThemedButton({
       {...props}
     >
       <ThemedText 
-        color={getTextColor()} 
         weight="semibold"
         size={size === 'sm' ? 'sm' : 'base'}
+        style={{ color: getTextColor() }}
       >
         {children}
       </ThemedText>
@@ -321,7 +322,7 @@ export function ThemedCard({
   };
   
   return (
-    <ThemedView style={[cardStyle, style]} {...props}>
+    <ThemedView style={StyleSheet.flatten([cardStyle, style])} {...props}>
       {children}
     </ThemedView>
   );

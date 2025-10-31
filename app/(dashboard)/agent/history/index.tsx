@@ -134,7 +134,10 @@ export default function AgentHistory() {
   return (
     <ThemedView style={styles.container}>
       {/* 1️⃣ En-tête et barre de navigation supérieure */}
-      <ThemedView style={styles.header}>
+      <ThemedView 
+        variant="transparent"
+        style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}
+      >
         <TouchableOpacity
           style={styles.backButton}
           onPress={handleBackPress}
@@ -144,14 +147,14 @@ export default function AgentHistory() {
           <FontAwesome 
             name="arrow-left" 
             size={isTablet ? 24 : 20} 
-            color={theme.colors.text} 
+            color="#fff" 
           />
         </TouchableOpacity>
         
         <ThemedText 
           size="lg" 
           weight="bold" 
-          style={styles.headerTitle}
+          style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}
         >
           {t('agent.history.title')}
         </ThemedText>
@@ -165,7 +168,7 @@ export default function AgentHistory() {
           <FontAwesome 
             name="filter" 
             size={isTablet ? 24 : 20} 
-            color={theme.colors.text} 
+            color="#fff" 
           />
         </TouchableOpacity>
       </ThemedView>

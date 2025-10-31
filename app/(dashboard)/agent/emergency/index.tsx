@@ -139,7 +139,7 @@ export default function EmergencyScreen() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <ThemedView style={styles.header}>
+      <ThemedView style={StyleSheet.flatten([styles.header, { backgroundColor: theme.colors.primary }])}>
         <Pressable
           onPress={() => router.back()}
           style={styles.backButton}
@@ -149,14 +149,14 @@ export default function EmergencyScreen() {
           <FontAwesome
             name="arrow-left"
             size={20}
-            color={theme.colors.text}
+            color="#fff"
           />
         </Pressable>
         <ThemedView variant="transparent" style={styles.headerText}>
-          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+          <ThemedText size="xl" weight="bold" style={StyleSheet.flatten([styles.headerTitle, { color: '#fff' }])}>
             {t('agent.emergency.title')}
           </ThemedText>
-          <ThemedText variant="secondary" size="sm" style={styles.headerSubtitle}>
+          <ThemedText size="sm" style={StyleSheet.flatten([styles.headerSubtitle, { color: 'rgba(255, 255, 255, 0.9)' }])}>
             {t('agent.emergency.subtitle')}
           </ThemedText>
         </ThemedView>
