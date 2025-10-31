@@ -7,7 +7,7 @@ export default function ValidatorLayout() {
         name="queue"
         options={{
           title: 'File de validation',
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack>

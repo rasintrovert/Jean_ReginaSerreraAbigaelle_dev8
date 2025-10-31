@@ -68,8 +68,8 @@ export default function DashboardTabLayout() {
 
   const visibleTabs = getVisibleTabs();
 
-  // Pour les agents, masquer complètement la navigation des onglets
-  if (user?.role === 'agent') {
+  // Pour les agents et hôpitaux, masquer complètement la navigation des onglets
+  if (user?.role === 'agent' || user?.role === 'hospital') {
     return (
       <Tabs
         screenOptions={{
@@ -77,14 +77,26 @@ export default function DashboardTabLayout() {
           headerShown: false, // Masquer l'en-tête
         }}
       >
-        <Tabs.Screen
-          name="agent"
-          options={{
-            title: 'Agent',
-            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-            headerTitle: 'Agent de Terrain',
-          }}
-        />
+        {user?.role === 'agent' && (
+          <Tabs.Screen
+            name="agent"
+            options={{
+              title: 'Agent',
+              tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+              headerTitle: 'Agent de Terrain',
+            }}
+          />
+        )}
+        {user?.role === 'hospital' && (
+          <Tabs.Screen
+            name="hospital"
+            options={{
+              title: 'Hôpital',
+              tabBarIcon: ({ color }) => <TabBarIcon name="hospital-o" color={color} />,
+              headerTitle: 'Hôpital',
+            }}
+          />
+        )}
       </Tabs>
     );
   }
@@ -94,6 +106,7 @@ export default function DashboardTabLayout() {
       screenOptions={{
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textSecondary,
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
@@ -128,6 +141,7 @@ export default function DashboardTabLayout() {
             title: tab.title,
             tabBarIcon: ({ color }) => <TabBarIcon name={tab.icon} color={color} />,
             headerTitle: tab.headerTitle,
+            headerShown: false,
           }}
         />
       ))}

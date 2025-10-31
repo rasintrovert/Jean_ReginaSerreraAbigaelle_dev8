@@ -7,21 +7,49 @@ export default function HospitalLayout() {
         name="index"
         options={{
           title: 'Hôpital - Tableau de bord',
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name="pregnancy"
+        name="pregnancy/index"
         options={{
-          title: 'Suivi des grossesses',
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name="birth"
+        name="birth/index"
         options={{
-          title: 'Enregistrement de naissances',
-          headerShown: true,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="history/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="profile/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="help/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="settings/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="search/index"
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>

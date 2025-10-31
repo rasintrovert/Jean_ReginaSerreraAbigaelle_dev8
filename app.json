@@ -21,12 +21,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": false,
+      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "navigationBar": {
         "barStyle": "light-content",
         "backgroundColor": "#000000"
-      }
+      },
+      "package": "com.anonymous.GraceRegistry"
     },
     "web": {
       "bundler": "metro",

@@ -52,6 +52,13 @@ export default function AgentLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="settings/index"
+        options={{
+          title: 'Paramètres',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

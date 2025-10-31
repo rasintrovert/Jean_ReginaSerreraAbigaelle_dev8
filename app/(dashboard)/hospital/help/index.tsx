@@ -14,7 +14,7 @@ import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 type TabType = 'faq' | 'guide' | 'contact';
 
-export default function HelpScreen() {
+export default function HospitalHelpScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { isTablet } = useResponsive();
@@ -35,64 +35,64 @@ export default function HelpScreen() {
   const handleContact = (type: 'phone' | 'email' | 'whatsapp') => {
     switch (type) {
       case 'phone':
-        Linking.openURL(`tel:${t('agent.help.contactPhoneValue')}`);
+        Linking.openURL(`tel:${t('hospital.help.contactPhoneValue') || t('agent.help.contactPhoneValue')}`);
         break;
       case 'email':
-        Linking.openURL(`mailto:${t('agent.help.contactEmailValue')}`);
+        Linking.openURL(`mailto:${t('hospital.help.contactEmailValue') || t('agent.help.contactEmailValue')}`);
         break;
       case 'whatsapp':
-        Linking.openURL(`https://wa.me/${t('agent.help.contactWhatsAppValue').replace(/\s/g, '')}`);
+        Linking.openURL(`https://wa.me/${(t('hospital.help.contactWhatsAppValue') || t('agent.help.contactWhatsAppValue')).replace(/\s/g, '')}`);
         break;
     }
   };
 
   const faqQuestions = [
     {
-      question: t('agent.help.faqQ1'),
-      answer: t('agent.help.faqA1'),
+      question: t('hospital.help.faqQ1') || t('agent.help.faqQ1'),
+      answer: t('hospital.help.faqA1') || t('agent.help.faqA1'),
     },
     {
-      question: t('agent.help.faqQ2'),
-      answer: t('agent.help.faqA2'),
+      question: t('hospital.help.faqQ2') || t('agent.help.faqQ2'),
+      answer: t('hospital.help.faqA2') || t('agent.help.faqA2'),
     },
     {
-      question: t('agent.help.faqQ3'),
-      answer: t('agent.help.faqA3'),
+      question: t('hospital.help.faqQ3') || t('agent.help.faqQ3'),
+      answer: t('hospital.help.faqA3') || t('agent.help.faqA3'),
     },
     {
-      question: t('agent.help.faqQ4'),
-      answer: t('agent.help.faqA4'),
+      question: t('hospital.help.faqQ4') || t('agent.help.faqQ4'),
+      answer: t('hospital.help.faqA4') || t('agent.help.faqA4'),
     },
     {
-      question: t('agent.help.faqQ5'),
-      answer: t('agent.help.faqA5'),
+      question: t('hospital.help.faqQ5') || t('agent.help.faqQ5'),
+      answer: t('hospital.help.faqA5') || t('agent.help.faqA5'),
     },
     {
-      question: t('agent.help.faqQ6'),
-      answer: t('agent.help.faqA6'),
+      question: t('hospital.help.faqQ6') || t('agent.help.faqQ6'),
+      answer: t('hospital.help.faqA6') || t('agent.help.faqA6'),
     },
   ];
 
   const guideCards = [
     {
       icon: 'heart' as const,
-      title: t('agent.help.guideRegisterPregnancy'),
-      description: t('agent.help.guideRegisterPregnancyDesc'),
+      title: t('hospital.help.guideRegisterPregnancy') || t('agent.help.guideRegisterPregnancy'),
+      description: t('hospital.help.guideRegisterPregnancyDesc') || t('agent.help.guideRegisterPregnancyDesc'),
     },
     {
       icon: 'child' as const,
-      title: t('agent.help.guideRegisterBirth'),
-      description: t('agent.help.guideRegisterBirthDesc'),
+      title: t('hospital.help.guideRegisterBirth') || t('agent.help.guideRegisterBirth'),
+      description: t('hospital.help.guideRegisterBirthDesc') || t('agent.help.guideRegisterBirthDesc'),
     },
     {
       icon: 'file-text' as const,
-      title: t('agent.help.guideGenerateProof'),
-      description: t('agent.help.guideGenerateProofDesc'),
+      title: t('hospital.help.guideGenerateProof') || t('agent.help.guideGenerateProof'),
+      description: t('hospital.help.guideGenerateProofDesc') || t('agent.help.guideGenerateProofDesc'),
     },
     {
       icon: 'history' as const,
-      title: t('agent.help.guideHistory'),
-      description: t('agent.help.guideHistoryDesc'),
+      title: t('hospital.help.guideHistory') || t('agent.help.guideHistory'),
+      description: t('hospital.help.guideHistoryDesc') || t('agent.help.guideHistoryDesc'),
     },
   ];
 
@@ -111,9 +111,6 @@ export default function HelpScreen() {
                 }
               ]}
               onPress={() => toggleQuestion(index)}
-              accessibilityLabel={item.question}
-              accessibilityRole="button"
-              accessibilityHint={isExpanded ? 'Fermer la réponse' : 'Ouvrir la réponse'}
             >
               <ThemedText size="base" weight="medium" style={styles.faqQuestion}>
                 {item.question}
@@ -162,7 +159,6 @@ export default function HelpScreen() {
         ))}
       </View>
 
-      {/* Bloc vidéo */}
       <ThemedCard style={styles.videoCard}>
         <ThemedView variant="transparent" style={styles.videoCardContent}>
           <FontAwesome
@@ -172,20 +168,16 @@ export default function HelpScreen() {
             style={styles.videoIcon}
           />
           <ThemedText size="base" weight="medium" style={styles.videoTitle}>
-            {t('agent.help.guideVideoTitle')}
+            {t('hospital.help.guideVideoTitle') || t('agent.help.guideVideoTitle')}
           </ThemedText>
           <PressableButton
             variant="outline"
             size="md"
-            onPress={() => {
-              // TODO: Ouvrir la vidéo
-              console.log('Ouvrir vidéo');
-            }}
-            accessibilityLabel={t('agent.help.guideVideoButton')}
+            onPress={() => console.log('Ouvrir vidéo')}
           >
             <FontAwesome name="play" size={16} color={theme.colors.primary} />
             <ThemedText size="sm" style={{ color: theme.colors.primary, marginLeft: 8 }}>
-              {t('agent.help.guideVideoButton')}
+              {t('hospital.help.guideVideoButton') || t('agent.help.guideVideoButton')}
             </ThemedText>
           </PressableButton>
         </ThemedView>
@@ -196,25 +188,21 @@ export default function HelpScreen() {
   const renderContact = () => (
     <>
       <ThemedCard style={styles.contactCard}>
-        {/* Téléphone */}
         <Pressable
           style={styles.contactItem}
           onPress={() => handleContact('phone')}
-          accessibilityLabel={`${t('agent.help.contactPhoneLabel')}: ${t('agent.help.contactPhoneValue')}`}
-          accessibilityRole="button"
         >
           <FontAwesome name="phone" size={20} color={theme.colors.primary} style={styles.contactIcon} />
           <ThemedView variant="transparent" style={styles.contactTextContainer}>
             <ThemedText variant="secondary" size="sm">
-              {t('agent.help.contactPhoneLabel')}
+              {t('hospital.help.contactPhoneLabel') || t('agent.help.contactPhoneLabel')}
             </ThemedText>
             <ThemedText size="base" weight="medium">
-              {t('agent.help.contactPhoneValue')}
+              {t('hospital.help.contactPhoneValue') || t('agent.help.contactPhoneValue')}
             </ThemedText>
           </ThemedView>
         </Pressable>
 
-        {/* E-mail */}
         <Pressable
           style={[
             styles.contactItem,
@@ -226,45 +214,39 @@ export default function HelpScreen() {
             }
           ]}
           onPress={() => handleContact('email')}
-          accessibilityLabel={`${t('agent.help.contactEmailLabel')}: ${t('agent.help.contactEmailValue')}`}
-          accessibilityRole="button"
         >
           <FontAwesome name="envelope" size={20} color={theme.colors.primary} style={styles.contactIcon} />
           <ThemedView variant="transparent" style={styles.contactTextContainer}>
             <ThemedText variant="secondary" size="sm">
-              {t('agent.help.contactEmailLabel')}
+              {t('hospital.help.contactEmailLabel') || t('agent.help.contactEmailLabel')}
             </ThemedText>
             <ThemedText size="base" weight="medium">
-              {t('agent.help.contactEmailValue')}
+              {t('hospital.help.contactEmailValue') || t('agent.help.contactEmailValue')}
             </ThemedText>
           </ThemedView>
         </Pressable>
 
-        {/* WhatsApp */}
         <Pressable
           style={styles.contactItem}
           onPress={() => handleContact('whatsapp')}
-          accessibilityLabel={`${t('agent.help.contactWhatsAppLabel')}: ${t('agent.help.contactWhatsAppValue')}`}
-          accessibilityRole="button"
         >
           <FontAwesome name="whatsapp" size={20} color={theme.colors.success} style={styles.contactIcon} />
           <ThemedView variant="transparent" style={styles.contactTextContainer}>
             <ThemedText variant="secondary" size="sm">
-              {t('agent.help.contactWhatsAppLabel')}
+              {t('hospital.help.contactWhatsAppLabel') || t('agent.help.contactWhatsAppLabel')}
             </ThemedText>
             <ThemedText size="base" weight="medium">
-              {t('agent.help.contactWhatsAppValue')}
+              {t('hospital.help.contactWhatsAppValue') || t('agent.help.contactWhatsAppValue')}
             </ThemedText>
           </ThemedView>
         </Pressable>
       </ThemedCard>
 
-      {/* Bloc informatif */}
       <ThemedCard style={styles.infoCard}>
         <ThemedView variant="transparent" style={styles.infoCardContent}>
           <FontAwesome name="clock-o" size={20} color={theme.colors.info} style={styles.infoIcon} />
           <ThemedText variant="secondary" size="sm" style={styles.infoText}>
-            {t('agent.help.contactAvailable')}
+            {t('hospital.help.contactAvailable') || t('agent.help.contactAvailable')}
           </ThemedText>
         </ThemedView>
       </ThemedCard>
@@ -273,13 +255,10 @@ export default function HelpScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header */}
       <ThemedView style={styles.header}>
         <Pressable
           onPress={() => router.back()}
           style={styles.backButton}
-          accessibilityLabel={t('common.back')}
-          accessibilityRole="button"
         >
           <FontAwesome
             name="arrow-left"
@@ -289,12 +268,11 @@ export default function HelpScreen() {
         </Pressable>
         <ThemedView variant="transparent" style={styles.headerText}>
           <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
-            {t('agent.help.title')}
+            {t('hospital.help.title') || t('agent.help.title')}
           </ThemedText>
         </ThemedView>
       </ThemedView>
 
-      {/* Sous-menu d'onglets */}
       <ThemedView style={styles.tabsContainer}>
         <Pressable
           style={[
@@ -306,8 +284,6 @@ export default function HelpScreen() {
             }
           ]}
           onPress={() => setActiveTab('faq')}
-          accessibilityLabel={t('agent.help.tabFAQ')}
-          accessibilityRole="button"
         >
           <FontAwesome
             name="question-circle"
@@ -322,7 +298,7 @@ export default function HelpScreen() {
               color: activeTab === 'faq' ? theme.colors.primary : theme.colors.textSecondary,
             }}
           >
-            {t('agent.help.tabFAQ')}
+            {t('hospital.help.tabFAQ') || t('agent.help.tabFAQ')}
           </ThemedText>
         </Pressable>
 
@@ -336,8 +312,6 @@ export default function HelpScreen() {
             }
           ]}
           onPress={() => setActiveTab('guide')}
-          accessibilityLabel={t('agent.help.tabGuide')}
-          accessibilityRole="button"
         >
           <FontAwesome
             name="book"
@@ -352,7 +326,7 @@ export default function HelpScreen() {
               color: activeTab === 'guide' ? theme.colors.primary : theme.colors.textSecondary,
             }}
           >
-            {t('agent.help.tabGuide')}
+            {t('hospital.help.tabGuide') || t('agent.help.tabGuide')}
           </ThemedText>
         </Pressable>
 
@@ -366,8 +340,6 @@ export default function HelpScreen() {
             }
           ]}
           onPress={() => setActiveTab('contact')}
-          accessibilityLabel={t('agent.help.tabContact')}
-          accessibilityRole="button"
         >
           <FontAwesome
             name="phone"
@@ -382,12 +354,11 @@ export default function HelpScreen() {
               color: activeTab === 'contact' ? theme.colors.primary : theme.colors.textSecondary,
             }}
           >
-            {t('agent.help.tabContact')}
+            {t('hospital.help.tabContact') || t('agent.help.tabContact')}
           </ThemedText>
         </Pressable>
       </ThemedView>
 
-      {/* Contenu */}
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -423,9 +394,7 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
-  headerTitle: {
-    // No specific styles needed
-  },
+  headerTitle: {},
   tabsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -456,7 +425,6 @@ const styles = StyleSheet.create({
     maxWidth: 800,
     alignSelf: 'center',
   },
-  // FAQ Styles
   contentCard: {
     marginBottom: 16,
   },
@@ -479,7 +447,6 @@ const styles = StyleSheet.create({
   answerText: {
     lineHeight: 20,
   },
-  // Guide Styles
   guideCardsContainer: {
     gap: 16,
     marginBottom: 16,
@@ -519,7 +486,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 16,
   },
-  // Contact Styles
   contactCard: {
     marginBottom: 16,
   },
@@ -530,9 +496,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 16,
   },
-  contactIcon: {
-    // Icon styling
-  },
+  contactIcon: {},
   contactTextContainer: {
     flex: 1,
   },
@@ -545,11 +509,10 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 8,
   },
-  infoIcon: {
-    // Icon styling
-  },
+  infoIcon: {},
   infoText: {
     flex: 1,
     textAlign: 'center',
   },
 });
+

@@ -7,14 +7,14 @@ export default function AdminLayout() {
         name="index"
         options={{
           title: 'Admin - Tableau de bord',
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="certificates"
         options={{
           title: 'Gestion des certificats',
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack>

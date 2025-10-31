@@ -1,5 +1,5 @@
+import { PressableButton } from '@/components/PressableButton';
 import {
-  ThemedButton,
   ThemedCard,
   ThemedInput,
   ThemedText,
@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Alert, Linking, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 // Schéma de validation pour l'urgence
@@ -33,14 +33,14 @@ export default function EmergencyScreen() {
   const { isTablet } = useResponsive();
   const t = useTranslation();
   const [isSending, setIsSending] = useState(false);
-  const [showUrgencyPicker, setShowUrgencyPicker] = useState(false);
   const [selectedUrgency, setSelectedUrgency] = useState<'low' | 'medium' | 'high' | 'critical' | ''>('');
+  const [showCallModal, setShowCallModal] = useState(false);
+  const [emergencyToCall, setEmergencyToCall] = useState<{ name: string; number: string } | null>(null);
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
     setValue,
   } = useForm<EmergencyFormData>({
     resolver: zodResolver(emergencySchema),
@@ -71,18 +71,22 @@ export default function EmergencyScreen() {
     }
   };
 
-  const callEmergency = (number: string) => {
-    Alert.alert(
-      t('agent.emergency.callEmergency'),
-      t('agent.emergency.callEmergencyDesc', { number }),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        { 
-          text: t('agent.emergency.call'), 
-          onPress: () => Linking.openURL(`tel:${number}`)
-        },
-      ]
-    );
+  const callEmergency = (name: string, number: string) => {
+    setEmergencyToCall({ name, number });
+    setShowCallModal(true);
+  };
+
+  const handleConfirmCall = () => {
+    if (emergencyToCall) {
+      Linking.openURL(`tel:${emergencyToCall.number}`);
+      setShowCallModal(false);
+      setEmergencyToCall(null);
+    }
+  };
+
+  const handleCancelCall = () => {
+    setShowCallModal(false);
+    setEmergencyToCall(null);
   };
 
   const emergencyNumbers = [
@@ -132,45 +136,39 @@ export default function EmergencyScreen() {
     }
   ];
 
-  const formData = watch();
-
   return (
     <ThemedView style={styles.container}>
-      <ScrollView 
+      {/* Header */}
+      <ThemedView style={styles.header}>
+        <Pressable
+          onPress={() => router.back()}
+          style={styles.backButton}
+          accessibilityLabel={t('common.back')}
+          accessibilityRole="button"
+        >
+          <FontAwesome
+            name="arrow-left"
+            size={20}
+            color={theme.colors.text}
+          />
+        </Pressable>
+        <ThemedView variant="transparent" style={styles.headerText}>
+          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+            {t('agent.emergency.title')}
+          </ThemedText>
+          <ThemedText variant="secondary" size="sm" style={styles.headerSubtitle}>
+            {t('agent.emergency.subtitle')}
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+
+      <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
           isTablet && styles.scrollContentTablet
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header d'urgence */}
-        <ThemedCard style={{ ...styles.headerCard, borderLeftWidth: 4, borderLeftColor: theme.colors.error }}>
-          <ThemedView variant="transparent" style={styles.headerContent}>
-            <FontAwesome 
-              name="exclamation-triangle" 
-              size={isTablet ? 40 : 32} 
-              color={theme.colors.error} 
-            />
-            <ThemedView variant="transparent" style={styles.headerText}>
-              <ThemedText 
-                size="xl" 
-                weight="bold" 
-                style={{ ...styles.title, color: theme.colors.error }}
-                accessibilityLabel={t('agent.emergency.title')}
-              >
-                {t('agent.emergency.title')}
-              </ThemedText>
-              <ThemedText 
-                variant="secondary" 
-                size="sm"
-                accessibilityLabel={t('agent.emergency.subtitle')}
-              >
-                {t('agent.emergency.subtitle')}
-              </ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </ThemedCard>
-
         {/* Numéros d'urgence */}
         <ThemedCard style={styles.emergencyCard}>
           <ThemedText 
@@ -179,20 +177,22 @@ export default function EmergencyScreen() {
             style={styles.sectionTitle}
             accessibilityLabel={t('agent.emergency.emergencyNumbers')}
           >
-            📞 {t('agent.emergency.emergencyNumbers')}
+            {t('agent.emergency.emergencyNumbers')}
           </ThemedText>
           
-          <ThemedView variant="transparent" style={styles.emergencyGrid}>
+          <View style={styles.emergencyGrid}>
             {emergencyNumbers.map((emergency) => (
-              <ThemedButton
+              <PressableButton
                 key={emergency.number}
                 variant="outline"
-                style={{ ...styles.emergencyButton, borderColor: emergency.color }}
-                onPress={() => callEmergency(emergency.number)}
+                style={{
+                  ...styles.emergencyButton,
+                  borderColor: emergency.color,
+                }}
+                onPress={() => callEmergency(emergency.name, emergency.number)}
                 accessibilityLabel={`Appeler ${emergency.name} - ${emergency.number}`}
-                accessibilityHint={`Appuie pour appeler ${emergency.name}`}
               >
-                <ThemedView variant="transparent" style={styles.emergencyButtonContent}>
+                <View style={styles.emergencyButtonContent}>
                   <FontAwesome 
                     name={emergency.icon} 
                     size={20} 
@@ -214,10 +214,10 @@ export default function EmergencyScreen() {
                       {emergency.number}
                     </ThemedText>
                   </ThemedView>
-                </ThemedView>
-              </ThemedButton>
+                </View>
+              </PressableButton>
             ))}
-          </ThemedView>
+          </View>
         </ThemedCard>
 
         {/* Conseils de sécurité */}
@@ -228,7 +228,7 @@ export default function EmergencyScreen() {
             style={styles.sectionTitle}
             accessibilityLabel={t('agent.emergency.safetyTips')}
           >
-            🚨 {t('agent.emergency.safetyTips')}
+            {t('agent.emergency.safetyTips')}
           </ThemedText>
           
           {safetyTips.map((tip, index) => (
@@ -271,7 +271,7 @@ export default function EmergencyScreen() {
             style={styles.sectionTitle}
             accessibilityLabel={t('agent.emergency.detailedReport')}
           >
-            📝 {t('agent.emergency.detailedReport')}
+            {t('agent.emergency.detailedReport')}
           </ThemedText>
 
           {/* Type d'urgence */}
@@ -319,23 +319,22 @@ export default function EmergencyScreen() {
             >
               {t('agent.emergency.urgencyLevel')} *
             </ThemedText>
-            <ThemedView variant="transparent" style={styles.urgencyButtons}>
+            <View style={styles.urgencyButtons}>
               {urgencyLevels.map((level) => (
-                <ThemedButton
+                <PressableButton
                   key={level.value}
                   variant={selectedUrgency === level.value ? 'primary' : 'outline'}
                   size="sm"
                   style={{
                     ...styles.urgencyButton,
                     borderColor: level.color,
-                    backgroundColor: selectedUrgency === level.value ? level.color : 'transparent'
+                    backgroundColor: selectedUrgency === level.value ? level.color : undefined,
                   }}
                   onPress={() => {
                     setSelectedUrgency(level.value as 'low' | 'medium' | 'high' | 'critical');
                     setValue('urgencyLevel', level.value as 'low' | 'medium' | 'high' | 'critical');
                   }}
                   accessibilityLabel={`Niveau d'urgence ${level.label}`}
-                  accessibilityHint={`Sélectionne le niveau d'urgence ${level.label}`}
                 >
                   <ThemedText 
                     size="xs" 
@@ -346,9 +345,9 @@ export default function EmergencyScreen() {
                   >
                     {level.label}
                   </ThemedText>
-                </ThemedButton>
+                </PressableButton>
               ))}
-            </ThemedView>
+            </View>
             {errors.urgencyLevel && (
               <ThemedText variant="error" size="xs" style={styles.errorText}>
                 {errors.urgencyLevel.message}
@@ -465,36 +464,8 @@ export default function EmergencyScreen() {
           </ThemedView>
         </ThemedCard>
 
-        {/* Actions */}
-        <ThemedView style={styles.actionsContainer}>
-          <ThemedButton
-            variant="outline"
-            size="lg"
-            fullWidth
-            onPress={() => router.back()}
-            accessibilityLabel={t('common.cancel')}
-            accessibilityHint={t('common.cancel')}
-            style={styles.button}
-          >
-            {t('common.cancel')}
-          </ThemedButton>
-          
-          <ThemedButton
-            variant="primary"
-            size="lg"
-            fullWidth
-            onPress={handleSubmit(onSubmit)}
-            disabled={!isValid || isSending}
-            style={{ ...styles.button, backgroundColor: theme.colors.error }}
-            accessibilityLabel={t('agent.emergency.sendReport')}
-            accessibilityHint={t('agent.emergency.sendReport')}
-          >
-            {isSending ? t('agent.emergency.sending') : t('agent.emergency.sendReport')}
-          </ThemedButton>
-        </ThemedView>
-
         {/* Avertissement */}
-        <ThemedCard style={{ ...styles.warningCard, backgroundColor: 'rgba(220, 53, 69, 0.1)', borderLeftWidth: 4, borderLeftColor: theme.colors.error }}>
+        <ThemedCard style={{ ...styles.warningCard, borderLeftWidth: 4, borderLeftColor: theme.colors.error }}>
           <FontAwesome 
             name="warning" 
             size={20} 
@@ -508,7 +479,7 @@ export default function EmergencyScreen() {
               style={{ color: theme.colors.error }}
               accessibilityLabel={t('agent.emergency.warning')}
             >
-              ⚠️ {t('agent.emergency.warning')}
+              {t('agent.emergency.warning')}
             </ThemedText>
             <ThemedText 
               variant="secondary" 
@@ -519,7 +490,90 @@ export default function EmergencyScreen() {
             </ThemedText>
           </ThemedView>
         </ThemedCard>
+
+        {/* Actions */}
+        <ThemedView style={styles.actionsContainer}>
+          <PressableButton
+            variant="outline"
+            size="lg"
+            fullWidth
+            onPress={() => router.back()}
+            accessibilityLabel={t('common.cancel')}
+            style={styles.button}
+          >
+            {t('common.cancel')}
+          </PressableButton>
+          
+          <PressableButton
+            variant="primary"
+            size="lg"
+            fullWidth
+            onPress={handleSubmit(onSubmit)}
+            disabled={!isValid || isSending}
+            accessibilityLabel={t('agent.emergency.sendReport')}
+            style={{ ...styles.button, backgroundColor: theme.colors.error }}
+          >
+            {isSending ? t('agent.emergency.sending') : t('agent.emergency.sendReport')}
+          </PressableButton>
+        </ThemedView>
       </ScrollView>
+
+      {/* Modal pour confirmer l'appel d'urgence */}
+      <Modal
+        visible={showCallModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCancelCall}
+      >
+        <View style={styles.modalOverlay}>
+          <Pressable style={styles.modalOverlayPressable} onPress={handleCancelCall} />
+          <ThemedCard style={styles.modalContent}>
+            <ThemedView variant="transparent" style={styles.modalHeader}>
+              <FontAwesome
+                name="phone"
+                size={24}
+                color={theme.colors.primary}
+              />
+              <ThemedText size="lg" weight="bold" style={styles.modalTitle}>
+                {t('agent.emergency.callEmergency')}
+              </ThemedText>
+            </ThemedView>
+
+            <ThemedText
+              variant="secondary"
+              size="base"
+              style={styles.modalMessage}
+            >
+              {t('agent.emergency.callEmergencyDesc', { number: emergencyToCall?.number || '' })}
+            </ThemedText>
+
+            <ThemedView variant="transparent" style={styles.modalButtons}>
+              <PressableButton
+                variant="outline"
+                size="md"
+                onPress={handleCancelCall}
+                accessibilityLabel={t('common.cancel')}
+                style={styles.modalButton}
+              >
+                {t('common.cancel')}
+              </PressableButton>
+
+              <PressableButton
+                variant="primary"
+                size="md"
+                onPress={handleConfirmCall}
+                accessibilityLabel={t('agent.emergency.call')}
+                style={styles.modalButton}
+              >
+                <FontAwesome name="phone" size={16} color="#fff" />
+                <ThemedText size="base" weight="semibold" style={{ color: '#fff', marginLeft: 8 }}>
+                  {t('agent.emergency.call')}
+                </ThemedText>
+              </PressableButton>
+            </ThemedView>
+          </ThemedCard>
+        </View>
+      </Modal>
     </ThemedView>
   );
 }
@@ -527,6 +581,28 @@ export default function EmergencyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  backButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  headerText: {
+    flex: 1,
+  },
+  headerTitle: {
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    // No specific styles needed, inherits from ThemedText variant="secondary"
   },
   scrollContent: {
     padding: 16,
@@ -537,22 +613,8 @@ const styles = StyleSheet.create({
     maxWidth: 800,
     alignSelf: 'center',
   },
-  headerCard: {
-    marginBottom: 24,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  headerText: {
-    flex: 1,
-  },
-  title: {
-    marginBottom: 4,
-  },
   emergencyCard: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   sectionTitle: {
     marginBottom: 16,
@@ -561,19 +623,19 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   emergencyButton: {
-    padding: 0,
+    // Styles handled by PressableButton
   },
   emergencyButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    padding: 12,
+    width: '100%',
   },
   emergencyButtonText: {
     flex: 1,
   },
   tipsCard: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   tipSection: {
     marginBottom: 16,
@@ -595,7 +657,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   formCard: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   inputContainer: {
     marginBottom: 16,
@@ -634,6 +696,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
+    marginBottom: 16,
+    padding: 16,
   },
   warningIcon: {
     marginTop: 2,
@@ -644,5 +708,50 @@ const styles = StyleSheet.create({
   warningText: {
     marginTop: 4,
     lineHeight: 18,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalOverlayPressable: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  modalContent: {
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 1,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    // No specific styles needed
+  },
+  modalMessage: {
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
   },
 });

@@ -48,20 +48,17 @@ function StatusBarHandler() {
       StatusBar.setBackgroundColor(isDark ? '#000000' : '#ffffff', true);
       
       // 2. Configurer la barre de navigation Android
-      // Maintenant qu'edge-to-edge est désactivé, toutes les méthodes devraient fonctionner
+      // AVEC EDGE-TO-EDGE (Android 16+), on ne peut PAS utiliser :
+      // - setBackgroundColorAsync() (la barre hérite du fond de la fenêtre)
+      // - setBorderColorAsync() (pas supporté)
+      // 
+      // La solution : le fond de la fenêtre est configuré via le backgroundColor
+      // du SafeAreaView dans AppProvider, ce qui affecte automatiquement 
+      // la barre de navigation avec edge-to-edge.
       
-      // Changer la couleur de fond (maintenant supporté sans edge-to-edge)
-      await NavigationBar.setBackgroundColorAsync(isDark ? '#000000' : '#ffffff');
-      
-      // Changer le style des boutons
+      // Seul le style des boutons fonctionne avec edge-to-edge
       await NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
       
-      // Changer la couleur de bordure (si disponible)
-      try {
-        await NavigationBar.setBorderColorAsync(isDark ? '#000000' : '#ffffff');
-      } catch (borderError) {
-        // Peut ne pas être supporté sur toutes les versions Android
-      }
     } catch (error) {
       console.log('Navigation bar configuration error:', error);
     }
@@ -132,20 +129,45 @@ function StatusBarHandler() {
 }
 
 export function AppProvider({ children }: AppProviderProps) {
-  const { loadTheme } = useThemeStore();
+  const { loadTheme, appTheme } = useThemeStore();
   const { loadLanguage } = useLanguageStore();
+  const systemColorScheme = useColorScheme();
+  const [themeLoaded, setThemeLoaded] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>(systemColorScheme || 'light');
 
   // Charger le thème et la langue sauvegardés au démarrage
   useEffect(() => {
-    loadTheme();
-    loadLanguage();
+    const initialize = async () => {
+      await loadTheme();
+      await loadLanguage();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      setThemeLoaded(true);
+    };
+    initialize();
   }, [loadTheme, loadLanguage]);
+
+  // Déterminer le thème actuel
+  useEffect(() => {
+    if (themeLoaded) {
+      const mode = appTheme === 'system' ? systemColorScheme : appTheme;
+      setCurrentTheme(mode === 'dark' ? 'dark' : 'light');
+    }
+  }, [appTheme, systemColorScheme, themeLoaded]);
+
+  // Avec edge-to-edge, la barre de navigation hérite du fond de la fenêtre
+  // Donc on configure le backgroundColor du SafeAreaView selon le thème
+  const windowBackgroundColor = currentTheme === 'dark' ? '#000000' : '#ffffff';
 
   return (
     <SafeAreaProvider>
       <ThemeProvider>
         <StatusBarHandler />
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView 
+          style={{ 
+            flex: 1, 
+            backgroundColor: windowBackgroundColor 
+          }}
+        >
           {children}
         </SafeAreaView>
       </ThemeProvider>

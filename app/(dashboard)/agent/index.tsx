@@ -48,7 +48,7 @@ export default function AgentDashboard() {
   };
 
   const handleSettingsPress = () => {
-    router.push('/(dashboard)/agent/profile' as any);
+    router.push('/(dashboard)/agent/settings' as any);
   };
 
   const handleProofsPress = () => {
