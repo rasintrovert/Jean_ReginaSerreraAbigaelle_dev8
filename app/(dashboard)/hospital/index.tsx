@@ -627,22 +627,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
+    padding: 0,
     paddingBottom: 100,
   },
   scrollContentTablet: {
-    paddingHorizontal: 32,
-    maxWidth: 800,
-    alignSelf: 'center',
+    paddingHorizontal: 0,
+    maxWidth: '100%',
+    alignSelf: 'stretch',
     paddingBottom: 120,
   },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 24,
     marginBottom: 24,
-    borderRadius: 16,
-    marginHorizontal: 16,
-    marginTop: 16,
+    borderRadius: 0,
+    marginHorizontal: 0,
+    marginTop: 0,
+    width: '100%',
+    alignSelf: 'stretch',
   },
   headerContent: {
     flexDirection: 'row',
@@ -700,7 +702,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    paddingHorizontal: 4,
+    paddingHorizontal: 16,
   },
   mainTitle: {
     flex: 1,
@@ -718,6 +720,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
     marginBottom: 24,
+    paddingHorizontal: 16,
   },
   actionCard: {
     width: '47%',
@@ -751,6 +754,7 @@ const styles = StyleSheet.create({
   statsCard: {
     marginBottom: 20,
     padding: 20,
+    marginHorizontal: 16,
   },
   statsHeader: {
     marginBottom: 16,
@@ -816,6 +820,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 16,
   },
   bottomNavigation: {
     position: 'absolute',

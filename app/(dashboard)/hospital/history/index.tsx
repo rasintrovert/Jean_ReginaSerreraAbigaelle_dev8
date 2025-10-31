@@ -11,7 +11,9 @@ import { useTheme } from '@/theme';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { format, parse } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 type TabType = 'all' | 'pregnancy' | 'birth';
 type PeriodFilter = 'thisWeek' | 'thisMonth' | 'lastMonth';
@@ -37,47 +39,76 @@ export default function HospitalHistoryScreen() {
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>('thisWeek');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Données simulées
+  // Données simulées - formatées selon les spécifications
   const mockRecords: Record[] = [
     {
       id: '1',
       type: 'pregnancy',
-      referenceNumber: 'HOS-2025-01-15-001',
-      date: '15/01/2025',
-      recordedBy: 'Dr. Marie Joseph',
+      referenceNumber: 'PR-2025-001',
+      date: '2025-10-28',
+      recordedBy: 'Dr. Marie Jean',
       recordedByTitle: 'Médecin',
-      motherName: 'Sophie Pierre',
+      motherName: 'Sophie Laurent',
     },
     {
       id: '2',
       type: 'birth',
-      referenceNumber: 'HOS-2025-01-14-002',
-      date: '14/01/2025',
+      referenceNumber: 'INPR-2025-10-28-001',
+      date: '2025-10-28',
       recordedBy: 'Dr. Jean Baptiste',
       recordedByTitle: 'Gynécologue',
       childName: 'Marie Sophie',
-      motherName: 'Sophie Pierre',
-      fatherName: 'Jean Paul',
+      motherName: 'Sophie Laurent',
+      fatherName: 'Pierre Jean',
     },
     {
       id: '3',
       type: 'pregnancy',
-      referenceNumber: 'HOS-2025-01-13-003',
-      date: '13/01/2025',
-      recordedBy: 'Dr. Marie Joseph',
+      referenceNumber: 'PR-2025-002',
+      date: '2025-10-27',
+      recordedBy: 'Dr. Marie Jean',
       recordedByTitle: 'Médecin',
       motherName: 'Claire Antoine',
     },
     {
       id: '4',
       type: 'birth',
-      referenceNumber: 'HOS-2025-01-12-004',
-      date: '12/01/2025',
+      referenceNumber: 'INPR-2025-10-27-002',
+      date: '2025-10-27',
       recordedBy: 'Dr. Jean Baptiste',
       recordedByTitle: 'Gynécologue',
       childName: 'Pierre Jean',
       motherName: 'Claire Antoine',
       fatherName: 'Marc Antoine',
+    },
+    {
+      id: '5',
+      type: 'pregnancy',
+      referenceNumber: 'PR-2025-003',
+      date: '2025-10-26',
+      recordedBy: 'Dr. Marie Joseph',
+      recordedByTitle: 'Médecin',
+      motherName: 'Anne Marie',
+    },
+    {
+      id: '6',
+      type: 'birth',
+      referenceNumber: 'INPR-2025-10-26-003',
+      date: '2025-10-26',
+      recordedBy: 'Dr. Marie Joseph',
+      recordedByTitle: 'Gynécologue',
+      childName: 'Sophie Claire',
+      motherName: 'Anne Marie',
+      fatherName: 'Jean Paul',
+    },
+    {
+      id: '7',
+      type: 'pregnancy',
+      referenceNumber: 'PR-2025-004',
+      date: '2025-10-25',
+      recordedBy: 'Dr. Marie Jean',
+      recordedByTitle: 'Médecin',
+      motherName: 'Lucie Pierre',
     },
   ];
 
@@ -96,95 +127,145 @@ export default function HospitalHistoryScreen() {
   const birthRecords = filteredRecords.filter(r => r.type === 'birth');
   const totalCount = filteredRecords.length;
 
-  const getTypeIcon = (type: Record['type']) => {
-    return type === 'pregnancy' ? 'heart' : 'child';
+  const formatDate = (dateString: string) => {
+    try {
+      const date = parse(dateString, 'yyyy-MM-dd', new Date());
+      // Utiliser le format avec fr pour les deux langues
+      // Pour le créole, on pourrait adapter le format si nécessaire
+      return format(date, 'd MMM yyyy', { locale: fr });
+    } catch {
+      return dateString;
+    }
   };
 
-  const getTypeColor = (type: Record['type']) => {
-    return type === 'pregnancy' ? theme.colors.success : theme.colors.primary;
-  };
-
-  const renderRecordCard = (record: Record) => (
-    <ThemedCard key={record.id} style={styles.recordCard}>
-      <ThemedView variant="transparent" style={styles.recordHeader}>
-        <ThemedView 
-          variant="transparent" 
-          style={[styles.recordIcon, { backgroundColor: getTypeColor(record.type) + '20' }]}
-        >
-          <FontAwesome 
-            name={getTypeIcon(record.type)} 
-            size={16} 
-            color={getTypeColor(record.type)} 
-          />
-        </ThemedView>
-        <ThemedView variant="transparent" style={styles.recordContent}>
-          <ThemedText size="base" weight="semibold" style={styles.recordName} numberOfLines={1}>
-            {record.type === 'birth' ? record.childName : record.motherName}
-          </ThemedText>
-          <ThemedText variant="secondary" size="xs" style={styles.recordId}>
-            {record.referenceNumber} • {record.recordedBy} ({record.recordedByTitle})
-          </ThemedText>
-          {record.type === 'birth' && record.motherName && record.fatherName && (
-            <ThemedText variant="secondary" size="xs" style={styles.recordParents}>
-              {t('hospital.history.mother')}: {record.motherName} • {t('hospital.history.father')}: {record.fatherName}
+  const renderPregnancyCard = (record: Record) => (
+    <Pressable
+      key={record.id}
+      onPress={() => {
+        // TODO: Ouvrir la fiche détaillée
+        console.log('Ouvrir fiche grossesse:', record.id);
+      }}
+    >
+      <ThemedCard style={styles.recordCard}>
+        <ThemedView variant="transparent" style={styles.recordHeader}>
+          <ThemedView 
+            variant="transparent" 
+            style={[styles.recordIcon, { backgroundColor: theme.colors.success + '20' }]}
+          >
+            <FontAwesome 
+              name="user" 
+              size={20} 
+              color={theme.colors.success} 
+            />
+          </ThemedView>
+          <ThemedView variant="transparent" style={styles.recordContent}>
+            <ThemedText size="base" weight="bold" style={styles.recordName} numberOfLines={1}>
+              {record.motherName}
             </ThemedText>
-          )}
-          <ThemedView variant="transparent" style={styles.recordDateRow}>
-            <FontAwesome name="calendar" size={12} color={theme.colors.textSecondary} />
-            <ThemedText variant="secondary" size="xs" style={styles.recordDate}>
-              {record.date}
+            <ThemedText variant="secondary" size="sm" style={styles.recordId}>
+              {record.referenceNumber}
             </ThemedText>
+            <ThemedText variant="secondary" size="sm" style={styles.recordProfessional}>
+              {record.recordedBy}
+            </ThemedText>
+            <ThemedView variant="transparent" style={styles.recordDateRow}>
+              <FontAwesome name="calendar" size={12} color={theme.colors.textSecondary} />
+              <ThemedText variant="secondary" size="sm" style={styles.recordDate}>
+                {t('hospital.history.recorded')}: {formatDate(record.date)}
+              </ThemedText>
+            </ThemedView>
           </ThemedView>
         </ThemedView>
-      </ThemedView>
-    </ThemedCard>
+      </ThemedCard>
+    </Pressable>
+  );
+
+  const renderBirthCard = (record: Record) => (
+    <Pressable
+      key={record.id}
+      onPress={() => {
+        // TODO: Ouvrir la fiche détaillée
+        console.log('Ouvrir fiche naissance:', record.id);
+      }}
+    >
+      <ThemedCard style={styles.recordCard}>
+        <ThemedView variant="transparent" style={styles.recordHeader}>
+          <ThemedView 
+            variant="transparent" 
+            style={[styles.recordIcon, { backgroundColor: theme.colors.primary + '20' }]}
+          >
+            <FontAwesome 
+              name="child" 
+              size={20} 
+              color={theme.colors.primary} 
+            />
+          </ThemedView>
+          <ThemedView variant="transparent" style={styles.recordContent}>
+            <ThemedText size="base" weight="bold" style={styles.recordName} numberOfLines={1}>
+              {record.childName}
+            </ThemedText>
+            {record.motherName && record.fatherName && (
+              <ThemedText variant="secondary" size="sm" style={styles.recordParents}>
+                {record.motherName} & {record.fatherName}
+              </ThemedText>
+            )}
+            <ThemedText variant="secondary" size="sm" style={styles.recordId}>
+              {record.referenceNumber}
+            </ThemedText>
+            <ThemedText variant="secondary" size="sm" style={styles.recordProfessional}>
+              {record.recordedBy}
+            </ThemedText>
+            <ThemedView variant="transparent" style={styles.recordDateRow}>
+              <FontAwesome name="calendar" size={12} color={theme.colors.textSecondary} />
+              <ThemedText variant="secondary" size="sm" style={styles.recordDate}>
+                {t('hospital.history.recorded')}: {formatDate(record.date)}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
+      </ThemedCard>
+    </Pressable>
   );
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header Sticky */}
-      <ThemedView style={styles.header}>
-        <Pressable
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
-          <FontAwesome
-            name="arrow-left"
-            size={20}
-            color={theme.colors.text}
-          />
-        </Pressable>
-        <ThemedView variant="transparent" style={styles.headerText}>
-          <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
-            {t('hospital.history.title') || t('agent.history.title')}
-          </ThemedText>
-          <ThemedText variant="secondary" size="sm" style={styles.headerSubtitle}>
-            {t('hospital.history.subtitle') || 'Historique des enregistrements'}
-          </ThemedText>
+      {/* 1️⃣ PARTIE 1: HEADER (Sticky) */}
+      <ThemedView style={styles.headerSection}>
+        {/* Barre supérieure */}
+        <ThemedView style={styles.topBar}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <FontAwesome
+              name="arrow-left"
+              size={20}
+              color={theme.colors.text}
+            />
+          </Pressable>
+          <ThemedView variant="transparent" style={styles.headerText}>
+            <ThemedText size="xl" weight="bold" style={styles.headerTitle}>
+              {t('hospital.history.title')}
+            </ThemedText>
+            <ThemedText variant="secondary" size="xs" style={styles.headerSubtitle}>
+              {t('hospital.history.subtitle')}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
 
-      <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          isTablet && styles.scrollContentTablet
-        ]}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[0]}
-      >
-        {/* Carte résumé total */}
+        {/* Carte de résumé */}
         <ThemedCard style={styles.summaryCard}>
           <ThemedView variant="transparent" style={styles.summaryContent}>
-            <ThemedText size="3xl" weight="bold" style={styles.summaryNumber}>
+            <ThemedText size="2xl" weight="bold" style={styles.summaryNumber}>
               {totalCount}
             </ThemedText>
-            <ThemedText variant="secondary" size="base" style={styles.summaryLabel}>
-              {t('hospital.history.total') || 'Total'}
+            <ThemedText variant="secondary" size="sm" style={styles.summaryLabel}>
+              {t('hospital.history.total')}
             </ThemedText>
           </ThemedView>
         </ThemedCard>
 
-        {/* Filtres de période */}
+        {/* Filtres temporels */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -197,7 +278,11 @@ export default function HospitalHistoryScreen() {
             onPress={() => setPeriodFilter('thisWeek')}
             style={styles.periodFilterButton}
           >
-            <FontAwesome name="clock-o" size={14} color={periodFilter === 'thisWeek' ? '#fff' : theme.colors.primary} />
+            <FontAwesome 
+              name="clock-o" 
+              size={14} 
+              color={periodFilter === 'thisWeek' ? '#fff' : theme.colors.primary} 
+            />
             <ThemedText
               size="sm"
               style={{
@@ -205,7 +290,7 @@ export default function HospitalHistoryScreen() {
                 marginLeft: 6,
               }}
             >
-              {t('hospital.history.thisWeek') || 'Cette Semaine'}
+              {t('hospital.history.thisWeek')}
             </ThemedText>
           </PressableButton>
 
@@ -215,7 +300,11 @@ export default function HospitalHistoryScreen() {
             onPress={() => setPeriodFilter('thisMonth')}
             style={styles.periodFilterButton}
           >
-            <FontAwesome name="calendar" size={14} color={periodFilter === 'thisMonth' ? '#fff' : theme.colors.primary} />
+            <FontAwesome 
+              name="calendar" 
+              size={14} 
+              color={periodFilter === 'thisMonth' ? '#fff' : theme.colors.primary} 
+            />
             <ThemedText
               size="sm"
               style={{
@@ -223,7 +312,7 @@ export default function HospitalHistoryScreen() {
                 marginLeft: 6,
               }}
             >
-              {t('hospital.history.thisMonth') || 'Ce Mois'}
+              {t('hospital.history.thisMonth')}
             </ThemedText>
           </PressableButton>
 
@@ -233,7 +322,11 @@ export default function HospitalHistoryScreen() {
             onPress={() => setPeriodFilter('lastMonth')}
             style={styles.periodFilterButton}
           >
-            <FontAwesome name="trending-up" size={14} color={periodFilter === 'lastMonth' ? '#fff' : theme.colors.primary} />
+            <FontAwesome 
+              name="trending-up" 
+              size={14} 
+              color={periodFilter === 'lastMonth' ? '#fff' : theme.colors.primary} 
+            />
             <ThemedText
               size="sm"
               style={{
@@ -241,7 +334,7 @@ export default function HospitalHistoryScreen() {
                 marginLeft: 6,
               }}
             >
-              {t('hospital.history.lastMonth') || 'Mois Dernier'}
+              {t('hospital.history.lastMonth')}
             </ThemedText>
           </PressableButton>
         </ScrollView>
@@ -256,7 +349,7 @@ export default function HospitalHistoryScreen() {
               style={styles.searchIcon}
             />
             <ThemedInput
-              placeholder={t('hospital.history.searchPlaceholder') || t('agent.history.searchPlaceholder')}
+              placeholder={t('hospital.history.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
               size="md"
@@ -264,8 +357,17 @@ export default function HospitalHistoryScreen() {
             />
           </ThemedView>
         </ThemedCard>
+      </ThemedView>
 
-        {/* Onglets */}
+      {/* 2️⃣ PARTIE 2: CONTENU PRINCIPAL */}
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && styles.scrollContentTablet
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Onglets de catégories */}
         <ThemedView style={styles.tabsContainer}>
           <TouchableOpacity
             style={[
@@ -285,7 +387,7 @@ export default function HospitalHistoryScreen() {
                 color: activeTab === 'all' ? theme.colors.primary : theme.colors.textSecondary,
               }}
             >
-              {t('hospital.history.tabAll') || 'Tous'}
+              {t('hospital.history.tabAll')}
             </ThemedText>
           </TouchableOpacity>
 
@@ -307,7 +409,7 @@ export default function HospitalHistoryScreen() {
                 color: activeTab === 'pregnancy' ? theme.colors.success : theme.colors.textSecondary,
               }}
             >
-              {t('hospital.history.tabPregnancies') || 'Grossesses'} ({pregnancyRecords.length})
+              {t('hospital.history.tabPregnancies')} ({pregnancyRecords.length})
             </ThemedText>
           </TouchableOpacity>
 
@@ -329,20 +431,20 @@ export default function HospitalHistoryScreen() {
                 color: activeTab === 'birth' ? theme.colors.primary : theme.colors.textSecondary,
               }}
             >
-              {t('hospital.history.tabBirths') || 'Naissances'} ({birthRecords.length})
+              {t('hospital.history.tabBirths')} ({birthRecords.length})
             </ThemedText>
           </TouchableOpacity>
         </ThemedView>
 
-        {/* Contenu */}
+        {/* Liste des enregistrements */}
         {activeTab === 'all' ? (
           <>
             {pregnancyRecords.length > 0 && (
               <>
                 <ThemedText size="lg" weight="semibold" style={styles.sectionHeader}>
-                  {t('hospital.history.pregnancies') || 'Grossesses'}
+                  {t('hospital.history.pregnancies')}
                 </ThemedText>
-                {pregnancyRecords.map(renderRecordCard)}
+                {pregnancyRecords.map(renderPregnancyCard)}
               </>
             )}
             {birthRecords.length > 0 && (
@@ -352,34 +454,34 @@ export default function HospitalHistoryScreen() {
                   weight="semibold" 
                   style={[styles.sectionHeader, { marginTop: pregnancyRecords.length > 0 ? 24 : 0 }]}
                 >
-                  {t('hospital.history.births') || 'Naissances'}
+                  {t('hospital.history.births')}
                 </ThemedText>
-                {birthRecords.map(renderRecordCard)}
+                {birthRecords.map(renderBirthCard)}
               </>
             )}
           </>
         ) : activeTab === 'pregnancy' ? (
           pregnancyRecords.length > 0 ? (
-            pregnancyRecords.map(renderRecordCard)
+            pregnancyRecords.map(renderPregnancyCard)
           ) : (
             <ThemedCard style={styles.emptyCard}>
               <ThemedView variant="transparent" style={styles.emptyContent}>
                 <FontAwesome name="heart" size={48} color={theme.colors.textSecondary} />
                 <ThemedText variant="secondary" size="base" style={styles.emptyText}>
-                  {t('hospital.history.noPregnancies') || 'Aucune grossesse enregistrée'}
+                  {t('hospital.history.noPregnancies')}
                 </ThemedText>
               </ThemedView>
             </ThemedCard>
           )
         ) : (
           birthRecords.length > 0 ? (
-            birthRecords.map(renderRecordCard)
+            birthRecords.map(renderBirthCard)
           ) : (
             <ThemedCard style={styles.emptyCard}>
               <ThemedView variant="transparent" style={styles.emptyContent}>
                 <FontAwesome name="child" size={48} color={theme.colors.textSecondary} />
                 <ThemedText variant="secondary" size="base" style={styles.emptyText}>
-                  {t('hospital.history.noBirths') || 'Aucune naissance enregistrée'}
+                  {t('hospital.history.noBirths')}
                 </ThemedText>
               </ThemedView>
             </ThemedCard>
@@ -391,7 +493,7 @@ export default function HospitalHistoryScreen() {
             <ThemedView variant="transparent" style={styles.emptyContent}>
               <FontAwesome name="file-text-o" size={48} color={theme.colors.textSecondary} />
               <ThemedText variant="secondary" size="base" style={styles.emptyText}>
-                {t('hospital.history.noRecords') || 'Aucun enregistrement trouvé'}
+                {t('hospital.history.noRecords')}
               </ThemedText>
             </ThemedView>
           </ThemedCard>
@@ -405,52 +507,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  // PARTIE 1: HEADER
+  headerSection: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    gap: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 12,
+  },
   backButton: {
-    padding: 8,
+    padding: 6,
     borderRadius: 8,
   },
   headerText: {
     flex: 1,
+    alignItems: 'center',
   },
   headerTitle: {
-    marginBottom: 4,
+    marginBottom: 2,
+    textAlign: 'center',
   },
-  headerSubtitle: {},
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 100,
-  },
-  scrollContentTablet: {
-    paddingHorizontal: 32,
-    maxWidth: 800,
-    alignSelf: 'center',
+  headerSubtitle: {
+    textAlign: 'center',
   },
   summaryCard: {
-    marginBottom: 16,
+    marginBottom: 10,
     alignItems: 'center',
-    padding: 24,
+    padding: 6,
+    alignSelf: 'center',
+    minWidth: 80,
+    maxWidth: 120,
   },
   summaryContent: {
     alignItems: 'center',
   },
   summaryNumber: {
-    marginBottom: 8,
+    marginBottom: 2,
   },
   summaryLabel: {},
   periodFilters: {
-    marginBottom: 16,
+    marginBottom: 10,
   },
   periodFiltersContent: {
-    gap: 12,
+    gap: 8,
     paddingHorizontal: 4,
   },
   periodFilterButton: {
@@ -458,7 +563,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchCard: {
-    marginBottom: 16,
+    marginBottom: 0,
+    paddingHorizontal: 4,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -472,6 +578,18 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     paddingLeft: 48,
+    paddingRight: 16,
+    flex: 1,
+  },
+  // PARTIE 2: CONTENU
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 100,
+  },
+  scrollContentTablet: {
+    paddingHorizontal: 32,
+    maxWidth: 800,
+    alignSelf: 'center',
   },
   tabsContainer: {
     flexDirection: 'row',
@@ -491,6 +609,7 @@ const styles = StyleSheet.create({
   },
   recordCard: {
     marginBottom: 12,
+    borderRadius: 12,
   },
   recordHeader: {
     flexDirection: 'row',
@@ -498,9 +617,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   recordIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     flexShrink: 0,
@@ -510,12 +629,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   recordName: {
-    marginBottom: 4,
+    marginBottom: 6,
   },
   recordId: {
-    marginBottom: 2,
+    marginBottom: 4,
   },
   recordParents: {
+    marginBottom: 4,
+    fontStyle: 'italic',
+  },
+  recordProfessional: {
     marginBottom: 4,
   },
   recordDateRow: {
@@ -538,4 +661,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
